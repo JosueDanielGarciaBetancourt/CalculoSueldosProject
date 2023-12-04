@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>620</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1080</width>
+    <height>620</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1080</width>
+    <height>620</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Gestión de Sueldos</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#centralwidget{
+background-color: rgb(0, 0, 0);
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>20</y>
+      <width>651</width>
+      <height>78</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 40pt &quot;Calibri&quot;;
+color: rgb(182, 169, 89);
+</string>
+    </property>
+    <property name="text">
+     <string>Detalles del Software</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>530</y>
+      <width>181</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Calibri</family>
+      <pointsize>15</pointsize>
+      <italic>true</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 300 italic 15pt &quot;Calibri&quot;;
+color: rgb(80, 228, 94);
+
+</string>
+    </property>
+    <property name="text">
+     <string> Horizonte Company ®</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonAcercaDeGestorDeSueldosV1">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>200</y>
+      <width>271</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 20pt &quot;Calibri&quot;;
+color: white;
+border: 3px solid white;
+border-radius: 30px;
+background-color: rgb(100, 87, 47);</string>
+    </property>
+    <property name="text">
+     <string>Acerca de 
+Gestor de Sueldos v1</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="autoRepeat">
+     <bool>false</bool>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonAcercaDeNosotros">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>350</y>
+      <width>271</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 20pt &quot;Calibri&quot;;
+color: white;
+border: 3px solid white;
+border-radius: 30px;
+background-color: rgb(100, 87, 47);</string>
+    </property>
+    <property name="text">
+     <string>Acerca de nosotros</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>110</y>
+      <width>741</width>
+      <height>461</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>code_background-modified.jpeg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRegresar">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>520</y>
+      <width>75</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>flecha_regresar.png</normaloff>flecha_regresar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <zorder>label_2</zorder>
+   <zorder>label</zorder>
+   <zorder>label_3</zorder>
+   <zorder>pushButtonAcercaDeGestorDeSueldosV1</zorder>
+   <zorder>pushButtonAcercaDeNosotros</zorder>
+   <zorder>pushButtonRegresar</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubarMenuDetallesSW">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menubarMenu">
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Menú</string>
+    </property>
+    <addaction name="actionInicio"/>
+    <addaction name="actionTrabajador"/>
+    <addaction name="actionBonificaciones"/>
+   </widget>
+   <widget class="QMenu" name="menubarAyuda">
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Detalles del Software</string>
+    </property>
+    <addaction name="actionAcercaDeGestorDeSueldosV1"/>
+    <addaction name="actionAcercaDeNosotros"/>
+   </widget>
+   <widget class="QMenu" name="menubarArchivo">
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Archivo</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionSalir"/>
+   </widget>
+   <addaction name="menubarArchivo"/>
+   <addaction name="menubarMenu"/>
+   <addaction name="menubarAyuda"/>
+  </widget>
+  <action name="actionSobre_nosotros">
+   <property name="text">
+    <string>Sobre nosotros</string>
+   </property>
+  </action>
+  <action name="actionSalir2">
+   <property name="text">
+    <string>Salir2</string>
+   </property>
+  </action>
+  <action name="actionSalir">
+   <property name="text">
+    <string>Salir</string>
+   </property>
+  </action>
+  <action name="actionAcercaDeGestorDeSueldosV1">
+   <property name="text">
+    <string>Acerca de Gestor de Sueldos v1</string>
+   </property>
+  </action>
+  <action name="actionAcercaDeNosotros">
+   <property name="text">
+    <string>Acerca de nosotros</string>
+   </property>
+  </action>
+  <action name="actionaa">
+   <property name="text">
+    <string>aa</string>
+   </property>
+  </action>
+  <action name="actionVer_la_Ayuda">
+   <property name="text">
+    <string>Ver la Ayuda</string>
+   </property>
+  </action>
+  <action name="actionInicio">
+   <property name="text">
+    <string>Inicio</string>
+   </property>
+  </action>
+  <action name="actionTrabajador">
+   <property name="text">
+    <string>Trabajador</string>
+   </property>
+  </action>
+  <action name="actionBonificaciones">
+   <property name="text">
+    <string>Bonificaciones</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
