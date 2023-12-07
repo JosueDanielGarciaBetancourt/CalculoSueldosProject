@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/EP Sueldos master/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/EP Sueldos master/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (CalculoSueldosProject)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

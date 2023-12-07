@@ -5,7 +5,7 @@ engine = create_engine('sqlite:///Sueldos_DBLite.sqlite')
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
-def inicializarBD():
+def reiniciarDB():
     # Eliminar todas las tablas existentes
     Base.metadata.drop_all(engine)
     # Crear las tablas

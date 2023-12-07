@@ -3,7 +3,7 @@ from PyQt6.QtGui import QGuiApplication
 
 
 def returnDirectorioGUI():
-    directorioGUI = ("Recursos\\GUI\\")
+    directorioGUI = ("otros recursos\\GUI\\")
     return directorioGUI
 
 
