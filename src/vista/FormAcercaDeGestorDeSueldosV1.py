@@ -11,6 +11,8 @@ class FormAcercaDeGestorDeSueldosV1(QtWidgets.QMainWindow):
         uic.loadUi(f"{directorio_ui}AcercaDeGestorDeSueldosV1.ui", self)
         self.parent = parent
         center(self)
+        close_button = self.buttonBoxCerrar.button(QtWidgets.QDialogButtonBox.StandardButton.Close)
+        close_button.setText("Cerrar")
         self.initGUI()
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)  # Mantener por encima de otras ventanas
         self.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)  # Desactivar el botón de minimizar
