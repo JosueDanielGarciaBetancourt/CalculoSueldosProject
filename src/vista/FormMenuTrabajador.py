@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate
-from PyQt6.QtWidgets import QMessageBox
+from vista.Window_Utils import Mensajes
 from vista.Window_Utils import center, returnDirectorioGUI
 from logica.Inserts import Insert
 from logica.Deletes import Delete
@@ -118,23 +118,23 @@ class FormRegistrarNuevoTrabajador:
             if DNI.strip() == "":
                 campos_vacios.append("DNI")
             elif not DNI.isdigit() or len(DNI) != 8:
-                self.mostrarError("Error de validación", "El DNI debe contener 8 cifras numéricas")
+                Mensajes.mostrarError("Error de validación", "El DNI debe contener 8 cifras numéricas")
                 return
 
             if ApellidosNombres.strip() == "":
                 campos_vacios.append("Apellidos y Nombres")
             elif len(ApellidosNombres) > 50:
-                self.mostrarError("Error de validación",
-                                  "El campo 'Apellidos y Nombres' no puede tener más de 50 caracteres. Por favor, "
-                                  "ingrese una información más corta.")
+                Mensajes.mostrarError("Error de validación",
+                                      "El campo 'Apellidos y Nombres' no puede tener más de 50 caracteres. Por favor, "
+                                      "ingrese una información más corta.")
                 return
 
             if Cargo.strip() == "":
                 campos_vacios.append("Cargo")
             elif len(Cargo) > 100:
-                self.mostrarError("Error de validación",
-                                  "El campo 'Cargo' no puede tener más de 100 caracteres. Por favor, ingrese un cargo "
-                                  "más corto.")
+                Mensajes.mostrarError("Error de validación",
+                                      "El campo 'Cargo' no puede tener más de 100 caracteres. Por favor, ingrese un cargo "
+                                      "más corto.")
                 return
 
             if SueldoBase.strip() == "":
@@ -143,10 +143,10 @@ class FormRegistrarNuevoTrabajador:
                 try:
                     SueldoBase = float(SueldoBase)
                     if SueldoBase > 15000:
-                        self.mostrarError("Error de validación", "El Sueldo Básico no debe ser mayor a 15000.00")
+                        Mensajes.mostrarError("Error de validación", "El Sueldo Básico no debe ser mayor a 15000.00")
                         return
                 except ValueError:
-                    self.mostrarError("Error de valor", "El campo 'Sueldo Básico' debe contener un número")
+                    Mensajes.mostrarError("Error de valor", "El campo 'Sueldo Básico' debe contener un número")
                     return
 
             if campos_vacios:
@@ -155,7 +155,7 @@ class FormRegistrarNuevoTrabajador:
                 else:
                     mensaje = f"Los campos: {', '.join(campos_vacios)} están vacíos"
 
-                self.mostrarError("Error de validación", mensaje)
+                Mensajes.mostrarError("Error de validación", mensaje)
             else:
                 Insert.insertTrabajador(DNI, ApellidosNombres, SueldoBase, Cargo)
 
@@ -189,12 +189,23 @@ class FormBuscarExistenteTrabajador:
         self.parent.showMenuTrabajador()
 
     def viewInspeccionarTrabajador(self):
-        self.parent.showInspeccionarTrabajador()
+        busquedaDNI = self.BuscarExistenteTrabajador.lineEditDNIBuscar.text()
+        trabajadorBuscado = Queries.get_trabajador_by_id(busquedaDNI)
+        if busquedaDNI.strip() == "":
+            Mensajes.mostrarMensajeBusquedaError(f"Por favor ingrese el DNI del trabajador a inspeccionar")
+        elif not busquedaDNI.isdigit() or len(busquedaDNI) != 8:
+            Mensajes.mostrarMensajeBusquedaError("El DNI ingresado debe contener 8 cifras numéricas")
+        elif trabajadorBuscado is None:
+            Mensajes.mostrarMensajeBusquedaError(f"No existe trabajador con DNI: {busquedaDNI}")
+        else:
+            Mensajes.mostrarMensajeBusquedaExito(f"Trabajador con DNI: {busquedaDNI} encontrado")
+            self.parent.showInspeccionarTrabajador()
+
 
     def initGUI(self):
         self.BuscarExistenteTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
+        self.BuscarExistenteTrabajador.pushButtonInspeccionarTrabajador.clicked.connect(self.viewInspeccionarTrabajador)
         self.BuscarExistenteTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
-        self.BuscarExistenteTrabajador.pushButtonVerTrabajador.clicked.connect(self.viewInspeccionarTrabajador)
 
 
 class FormInspeccionarTrabajador:
@@ -214,4 +225,5 @@ class FormInspeccionarTrabajador:
         self.parent.showBuscarExistenteTrabajador()
 
     def initGUI(self):
-        pass
+        self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
+

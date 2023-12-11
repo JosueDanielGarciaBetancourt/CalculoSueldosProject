@@ -30,26 +30,26 @@ def EjemploOperacionesDB():
 
     print("\nTRABAJADORES")
     # Insertar trabajador
-    Insert.insertTrabajador("TRAB01", "Josué García", 500.00, "CIO")
-    Insert.insertTrabajador("TRAB02", "Sergio Ramírez", 700.00, "CIO2")
-    Insert.insertTrabajador("TRAB03", "Gian Piere", 1200.00, "CIO3")
+    Insert.insertTrabajador("77043114", "Josué García", 500.00, "CIO")
+    Insert.insertTrabajador("12345678", "Sergio Ramírez", 700.00, "CIO2")
+    Insert.insertTrabajador("87654321", "Gian Piere", 1200.00, "CIO3")
 
     print("\nDETALLE MENSUAL TRABAJADOR")
     # Insertar detalle mensual trabajador
-    Insert.insertDetalleMensualTrabajador("TRAB01", "MES11", 3, 60, 30, 1, 1, 2000.00)
-    Insert.insertDetalleMensualTrabajador("TRAB01", "MES12", 3, 60, 30, 1, 1, 2000.00)
-    Insert.insertDetalleMensualTrabajador("TRAB02", "MES05", 3, 60, 30, 1, 1, 2000.00)
+    Insert.insertDetalleMensualTrabajador("77043114", "MES11", 3, 60, 30, 1, 1, 2000.00)
+    Insert.insertDetalleMensualTrabajador("77043114", "MES12", 3, 60, 30, 1, 1, 2000.00)
+    Insert.insertDetalleMensualTrabajador("12345678", "MES05", 3, 60, 30, 1, 1, 2000.00)
 
     print("\nBOLETA DE PAGO")
     # Insertar boleta pago
-    Insert.insertBoletaPago("BOLE01TRAB01", "TRAB01", 2000.00, 200.00, 1700.00)
-    Insert.insertBoletaPago("BOLE01TRAB02", "TRAB02", 2000.00, 200.00, 1700.00)
+    Insert.insertBoletaPago("BOLE0177043114", "77043114", 2000.00, 200.00, 1700.00)
+    Insert.insertBoletaPago("BOLE0112345678", "12345678", 2000.00, 200.00, 1700.00)
 
     print("\nDETALLE BONIFICACIÓN")
     # Insertar detalle de bonificación
-    Insert.insertDetalleBonificacion("BONI01", "BOLE01TRAB01", 250.00)
-    Insert.insertDetalleBonificacion("BONI02", "BOLE01TRAB01", 1000.00)
-    Insert.insertDetalleBonificacion("BONI03", "BOLE01TRAB02", 750.00)
+    Insert.insertDetalleBonificacion("BONI01", "BOLE0177043114", 250.00)
+    Insert.insertDetalleBonificacion("BONI02", "BOLE0177043114", 1000.00)
+    Insert.insertDetalleBonificacion("BONI03", "BOLE0112345678", 750.00)
 
     print("\n==============DELETES==============")
     print("\nMES")
@@ -58,7 +58,7 @@ def EjemploOperacionesDB():
 
     print("\nTRABAJADOR")
     # Eliminando un trabajador (esto borrará registros en boletaPago)
-    Delete.deleteTrabajador("TRAB01")
+    Delete.deleteTrabajador("77043114")
 
     print("\nBONIFICACIÓN")
     # Eliminando una bonificación (esto borrará registros en detalleBonificacion)
@@ -67,7 +67,7 @@ def EjemploOperacionesDB():
     print("\n==============UPDATES==============")
 
     print("\nSUELDO BASE")
-    Update.updateSueldoBase("TRAB02", 100)
+    Update.updateSueldoBase("12345678", 100)
 
     print("\nBONIFICACIÓN")
     Update.updateValorBonificacion("BONI01", 0.6)
@@ -99,7 +99,7 @@ def EjemploOperacionesDB():
 
     # Ejemplo: Obtener un trabajador por ID
     print("TRABAJADOR")
-    trabajador = Queries.get_trabajador_by_id("TRAB02")
+    trabajador = Queries.get_trabajador_by_id("12345678")
     if trabajador:
         print("ID del Trabajador: ", trabajador.IDTrabajador)
         print("Nombre y Apellidos: ", trabajador.trabNombreApellidos)
@@ -112,7 +112,7 @@ def EjemploOperacionesDB():
 
     # Ejemplo: Obtener un detalle mensual de trabajador por ID de trabajador y ID de mes
     print("DETALLE MENSUAL")
-    detalle_mensual = Queries.get_detalle_mensual_trabajador_by_id("TRAB02", "MES05")
+    detalle_mensual = Queries.get_detalle_mensual_trabajador_by_id("12345678", "MES05")
     if detalle_mensual:
         print("ID del Trabajador: ", detalle_mensual.IDTrabajador)
         print("ID del Mes: ", detalle_mensual.IDMes)
@@ -131,7 +131,7 @@ def EjemploOperacionesDB():
 
     # Ejemplo: Obtener una boleta de pago por ID
     print("BOLETA DE PAGO")
-    boleta_pago = Queries.get_boleta_pago_by_id("BOLE01TRAB02")
+    boleta_pago = Queries.get_boleta_pago_by_id("BOLE0112345678")
     if boleta_pago:
         print("ID de Boleta de Pago:", boleta_pago.IDBoletaPago)
         print("ID del Trabajador:", boleta_pago.IDTrabajador)
@@ -147,7 +147,7 @@ def EjemploOperacionesDB():
 
     # Ejemplo: Obtener un detalle de bonificación por ID de bonificación y ID de boleta de pago
     print("DETALLE DE BONIFICACIÓN")
-    detalle_bonificacion = Queries.get_detalle_bonificacion_by_id("BONI03", "BOLE01TRAB02")
+    detalle_bonificacion = Queries.get_detalle_bonificacion_by_id("BONI03", "BOLE0112345678")
     if detalle_bonificacion:
         print("ID de Bonificación:", detalle_bonificacion.IDBonificacion)
         print("ID de Boleta de Pago:", detalle_bonificacion.IDBoletaPago)
@@ -157,19 +157,19 @@ def EjemploOperacionesDB():
 
     print("\n==============PRUEBA CÁLCULO SUELDO==============\n")
 
-    trab02 = Queries.get_trabajador_by_id("TRAB02")
-    detalleTrab02 = Queries.get_detalle_mensual_trabajador_by_id("TRAB02", "MES05")
+    trab02 = Queries.get_trabajador_by_id("12345678")
+    detalleTrab02 = Queries.get_detalle_mensual_trabajador_by_id("12345678", "MES05")
     Movilidad = Queries.get_bonificacion_by_id("BONI02")
     factSuplementaria = Queries.get_bonificacion_by_id("BONI03")
     print("BONIFICACIONES: \n")
     print("Movilidad: ", Movilidad.bonValor)
     print("Factor de bonif. Suplementaria: ", factSuplementaria.bonValor)
-    print("TRAB02: \n")
+    print("12345678: \n")
     print("ID del Trabajador: ", trab02.IDTrabajador)
     print("Nombre y Apellidos: ", trab02.trabNombreApellidos)
     print("Sueldo Base: ", trab02.trabSueldoBase)
     print("Fecha de Creación: ", trab02.created_at)
-    print("\nDetalle mensual TRAB02: \n")
+    print("\nDetalle mensual 12345678: \n")
     print("ID del Trabajador: ", detalleTrab02.IDTrabajador)
     print("ID del Mes: ", detalleTrab02.IDMes)
     print("Año: ", detalleTrab02.detalleAnio)
@@ -186,4 +186,4 @@ def EjemploOperacionesDB():
 
     sueldoNetoTrab02 = calcularSueldoTrab01.CalcularSueldoNeto()
 
-    print(f"\nEl SUELDO NETO de TRAB02 es: {sueldoNetoTrab02}")
+    print(f"\nEl SUELDO NETO de 12345678 es: {sueldoNetoTrab02}")

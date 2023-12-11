@@ -94,7 +94,7 @@ border-radius: 15px;
 </string>
     </property>
     <property name="text">
-     <string>77043114</string>
+     <string>12345678</string>
     </property>
    </widget>
    <widget class="QDateEdit" name="dateEditFechaActual">
@@ -122,7 +122,7 @@ border-radius: 15px;
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>12</hour>
+      <hour>22</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
@@ -157,13 +157,13 @@ color: white;
      <string>Ingrese DNI/Nombre:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonVerTrabajador">
+   <widget class="QPushButton" name="pushButtonInspeccionarTrabajador">
     <property name="geometry">
      <rect>
       <x>70</x>
       <y>460</y>
-      <width>181</width>
-      <height>41</height>
+      <width>131</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -187,10 +187,12 @@ color: white;
      <string notr="true">font: 700 15pt &quot;Calibri&quot;;
 color: white;
 border: 1px solid white;
+border-radius: 20px;
 background-color: rgb(41, 11, 11);</string>
     </property>
     <property name="text">
-     <string>Ver trabajador</string>
+     <string>Inspeccionar
+ trabajador</string>
     </property>
     <property name="checkable">
      <bool>false</bool>

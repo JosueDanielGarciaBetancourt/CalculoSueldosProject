@@ -91,6 +91,10 @@ class GestorSueldos:
             self.AcercaDeGestorDeSueldosV1.ocultar()
         if self.MenuTrabajador is not None:
             self.MenuTrabajador.ocultar()
+        if self.InspeccionarTrabajador is not None:
+            self.InspeccionarTrabajador.ocultar()
+        if self.BuscarExistenteTrabajador is None:
+            self.BuscarExistenteTrabajador.ocultar()
 
         if self.RegistrarNuevoTrabajador is None:
             self.RegistrarNuevoTrabajador = FormRegistrarNuevoTrabajador(self)
@@ -112,6 +116,8 @@ class GestorSueldos:
             self.MenuTrabajador.ocultar()
         if self.RegistrarNuevoTrabajador is not None:
             self.RegistrarNuevoTrabajador.ocultar()
+        if self.InspeccionarTrabajador is not None:
+            self.InspeccionarTrabajador.ocultar()
 
         if self.BuscarExistenteTrabajador is None:
             self.BuscarExistenteTrabajador = FormBuscarExistenteTrabajador(self)
