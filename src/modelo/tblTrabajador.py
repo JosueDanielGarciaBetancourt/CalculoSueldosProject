@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 class tblTrabajador(Base):
     __tablename__ = 'tblTrabajador'
     IDTrabajador = Column(String(8), primary_key=True)
-    trabNombreApellidos = Column(String(150), nullable=False)
+    trabNombreApellidos = Column(String(50), nullable=False)
     trabSueldoBase = Column(Float, nullable=False)
     Cargo = Column(String(150), nullable=False)
     created_at = Column(DateTime(), default=datetime.now)  # YYYY-MM-DD hh-mm-ss

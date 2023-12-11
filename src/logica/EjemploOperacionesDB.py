@@ -30,9 +30,9 @@ def EjemploOperacionesDB():
 
     print("\nTRABAJADORES")
     # Insertar trabajador
-    Insert.insertTrabajador("TRAB01", "Josué García", 500.00,'CIO')
-    Insert.insertTrabajador("TRAB02", "Sergio Ramírez", 700.00,'CIO2')
-    Insert.insertTrabajador("TRAB03", "Gian Piere", 1200.00,'CIO3')
+    Insert.insertTrabajador("TRAB01", "Josué García", 500.00, "CIO")
+    Insert.insertTrabajador("TRAB02", "Sergio Ramírez", 700.00, "CIO2")
+    Insert.insertTrabajador("TRAB03", "Gian Piere", 1200.00, "CIO3")
 
     print("\nDETALLE MENSUAL TRABAJADOR")
     # Insertar detalle mensual trabajador
@@ -51,7 +51,7 @@ def EjemploOperacionesDB():
     Insert.insertDetalleBonificacion("BONI02", "BOLE01TRAB01", 1000.00)
     Insert.insertDetalleBonificacion("BONI03", "BOLE01TRAB02", 750.00)
 
-    print("\n==============DELETES==============\n")
+    print("\n==============DELETES==============")
     print("\nMES")
     # Eliminando un mes
     Delete.deleteMes("MES12")
@@ -64,7 +64,7 @@ def EjemploOperacionesDB():
     # Eliminando una bonificación (esto borrará registros en detalleBonificacion)
     # Delete.deleteBonificacion("BONI02")
 
-    print("\n==============UPDATES==============\n")
+    print("\n==============UPDATES==============")
 
     print("\nSUELDO BASE")
     Update.updateSueldoBase("TRAB02", 100)

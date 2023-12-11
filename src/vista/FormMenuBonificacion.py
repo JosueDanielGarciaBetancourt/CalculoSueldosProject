@@ -72,6 +72,7 @@ class FormMenuBonificacion:
         self.MenuBonificacion.actionAcercaDeNosotros.triggered.connect(self.viewFormAcercaDeNosotros)
         self.MenuBonificacion.actionSalir.triggered.connect(self.salir)
 
+
 class FormBonificacionVerModificar:
     def __init__(self, parent):
         self.parent = parent
@@ -143,5 +144,4 @@ class FormBonificacionVerModificar:
         self.BonificacionVerModificar.tablaBonificaciones.resizeColumnsToContents()
         self.BonificacionVerModificar.tablaBonificaciones.resizeRowsToContents()
         self.BonificacionVerModificar.tablaBonificaciones.setEditTriggers(
-           QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
-
+            QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)

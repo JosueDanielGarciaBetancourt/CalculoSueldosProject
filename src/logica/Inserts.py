@@ -6,7 +6,31 @@ from modelo.tblBoletaPago import tblBoletaPago
 from modelo.tblDetalleBonificacion import tblDetalleBonificacion
 from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
-from PyQt6.QtWidgets import QMessageBox as mensaje
+from PyQt6.QtWidgets import QMessageBox
+
+successBox = None
+
+
+class Mensajes:
+    @staticmethod
+    def mostrarMensajeExito(mensaje):
+        global successBox
+        if successBox is None:
+            successBox = QMessageBox()
+            successBox.setWindowTitle("Registro exitoso")
+            successBox.setIcon(QMessageBox.Icon.Information)
+            successBox.setStandardButtons(QMessageBox.StandardButton.Ok)
+        successBox.setText(mensaje)
+        successBox.exec()
+    @staticmethod
+    def mostrarMensajeError(titulo, mensaje):
+        errorBox = QMessageBox()
+        errorBox.setWindowTitle(titulo)
+        errorBox.setText(mensaje)
+        errorBox.setIcon(QMessageBox.Icon.Warning)
+        errorBox.setStandardButtons(QMessageBox.StandardButton.Ok)
+        errorBox.exec()
+
 
 class Insert:
     @staticmethod
@@ -47,19 +71,21 @@ class Insert:
             try:
                 existing_trabajador = session.query(tblTrabajador).get(idTrabajador)
                 if existing_trabajador:
-                    print(f"El trabajador {idTrabajador} ya existe en la base de datos.")
-
+                    mensaje = f"El trabajador con ID {idTrabajador} ya existe en la base de datos."
+                    print(mensaje)
+                    Mensajes.mostrarMensajeError("Error de registro", mensaje)
                 else:
                     trabajador = tblTrabajador(IDTrabajador=idTrabajador, trabNombreApellidos=trabaNombreApellidos,
                                                trabSueldoBase=trabaSueldoBase, Cargo=Cargo)
                     session.add(trabajador)
                     session.commit()
 
-                    print(f"Se agregó el trabajador: {idTrabajador} {trabaNombreApellidos} {trabaSueldoBase} "
-                          f"Creado el: {trabajador.created_at}")
+                    mensaje = "Trabajador registrado satisfactoriamente"
+                    print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
+                          f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
+                    #Mensajes.mostrarMensajeExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
-
                 session.rollback()  # Revertir cambios en caso de error
 
     @staticmethod
@@ -119,7 +145,8 @@ class Insert:
                         f"El detalle de bonificación {idBonificacion} de la boleta {idBoletaPago} ya existe en la base "
                         f"de datos.")
                 else:
-                    detalleBonificacion = tblDetalleBonificacion(IDBonificacion=idBonificacion, IDBoletaPago=idBoletaPago,
+                    detalleBonificacion = tblDetalleBonificacion(IDBonificacion=idBonificacion,
+                                                                 IDBoletaPago=idBoletaPago,
                                                                  detbonMontoTotalPorBonificacion=detboniMontoTotalPorBonificacion)
                     session.add(detalleBonificacion)
                     session.commit()

@@ -1,8 +1,12 @@
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate
-from sqlalchemy.dialects.mysql import insert
+from PyQt6.QtWidgets import QMessageBox
 from vista.Window_Utils import center, returnDirectorioGUI
 from logica.Inserts import Insert
+from logica.Deletes import Delete
+from logica.Updates import Update
+from logica.Queries import Queries
+from logica.CalculoSueldo import CalculoSueldo
 
 directorio_ui = returnDirectorioGUI()
 
@@ -93,14 +97,65 @@ class FormRegistrarNuevoTrabajador:
     def ocultar(self):
         self.RegistrarNuevoTrabajador.close()
 
+    def mostrarError(self, titulo, mensaje):
+        errorBox = QMessageBox()
+        errorBox.setWindowTitle(titulo)
+        errorBox.setText(mensaje)
+        errorBox.setIcon(QMessageBox.Icon.Warning)
+        errorBox.setStandardButtons(QMessageBox.StandardButton.Ok)
+        errorBox.exec()
+
     def registrar(self):
-        DNI = self.RegistrarNuevoTrabajador.inputDNI.text()
-        Nombres = self.RegistrarNuevoTrabajador.inputNombres.text()
-        SueldoBasico = self.RegistrarNuevoTrabajador.inputSueldoBasico.text()
-        Cargo = self.RegistrarNuevoTrabajador.inputCargo.text()
-        print(F'{DNI}, {Nombres}, {float(SueldoBasico)}, {Cargo} ')
-        Insert.insertTrabajador(DNI, Nombres, float(SueldoBasico), Cargo)
-        self.parent.showMenuTrabajador()
+        try:
+            DNI = self.RegistrarNuevoTrabajador.inputDNI.text()
+            ApellidosNombres = self.RegistrarNuevoTrabajador.inputNombres.text()
+            SueldoBase = self.RegistrarNuevoTrabajador.inputSueldoBasico.text()
+            Cargo = self.RegistrarNuevoTrabajador.inputCargo.text()
+
+            # Validar campos vacíos y otras condiciones
+            campos_vacios = []
+
+            if DNI.strip() == "":
+                campos_vacios.append("DNI")
+            elif not DNI.isdigit() or len(DNI) != 8:
+                self.mostrarError("Error de validación", "El campo DNI debe contener 8 cifras numéricas")
+                return
+
+            if ApellidosNombres.strip() == "":
+                campos_vacios.append("Apellidos y Nombres")
+            elif len(ApellidosNombres) > 50:
+                self.mostrarError("Error de validación",
+                                  "El campo Apellidos y Nombres no debe superar los 50 caracteres")
+                return
+
+            if SueldoBase.strip() == "":
+                campos_vacios.append("Sueldo Básico")
+            else:
+                try:
+                    SueldoBase = float(SueldoBase)
+                    if SueldoBase > 15000:
+                        self.mostrarError("Error de validación", "El campo Sueldo Básico no debe ser mayor a 15000.00")
+                        return
+                except ValueError:
+                    self.mostrarError("Error de valor", f"El campo Sueldo Básico debe contener un número")
+                    return
+
+            if Cargo.strip() == "":
+                campos_vacios.append("Cargo")
+
+            if campos_vacios:
+                if len(campos_vacios) == 1:
+                    mensaje = f"El campo {', '.join(campos_vacios)} está vacío"
+                else:
+                    mensaje = f"Los campos: {', '.join(campos_vacios)} están vacíos"
+
+                self.mostrarError("Error de validación", mensaje)
+            else:
+                Insert.insertTrabajador(DNI, ApellidosNombres, SueldoBase, Cargo)
+
+        except Exception as e:
+            print(f"Surgió el siguiente error al registrar trabajador: {e}")
+
 
     def cancelar(self):
         self.parent.showMenuTrabajador()
