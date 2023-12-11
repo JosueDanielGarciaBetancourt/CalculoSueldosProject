@@ -1,4 +1,3 @@
-from PyQt6.QtWidgets import QApplication
 from vista.FormMenuPrincipal import FormMenuPrincipal
 from vista.FormMenuPrincipalSalir import FormMenuPrincipalSalir
 from vista.FormMenuTrabajador import FormMenuTrabajador, FormRegistrarNuevoTrabajador, FormBuscarExistenteTrabajador, \
@@ -9,8 +8,8 @@ from vista.FormAcercaDeNosotros import FormAcercaDeNosotros
 from vista.FormAcercaDeGestorDeSueldosV1 import FormAcercaDeGestorDeSueldosV1
 
 class GestorSueldos:
-    def __init__(self):
-        self.app = QApplication([])
+    def __init__(self, app):
+        self.app = app
 
         self.MenuPrincipal = FormMenuPrincipal(self)
         self.MenuTrabajador = FormMenuTrabajador(self)

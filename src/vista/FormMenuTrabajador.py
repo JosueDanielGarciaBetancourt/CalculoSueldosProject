@@ -118,14 +118,23 @@ class FormRegistrarNuevoTrabajador:
             if DNI.strip() == "":
                 campos_vacios.append("DNI")
             elif not DNI.isdigit() or len(DNI) != 8:
-                self.mostrarError("Error de validación", "El campo DNI debe contener 8 cifras numéricas")
+                self.mostrarError("Error de validación", "El DNI debe contener 8 cifras numéricas")
                 return
 
             if ApellidosNombres.strip() == "":
                 campos_vacios.append("Apellidos y Nombres")
             elif len(ApellidosNombres) > 50:
                 self.mostrarError("Error de validación",
-                                  "El campo Apellidos y Nombres no debe superar los 50 caracteres")
+                                  "El campo 'Apellidos y Nombres' no puede tener más de 50 caracteres. Por favor, "
+                                  "ingrese una información más corta.")
+                return
+
+            if Cargo.strip() == "":
+                campos_vacios.append("Cargo")
+            elif len(Cargo) > 100:
+                self.mostrarError("Error de validación",
+                                  "El campo 'Cargo' no puede tener más de 100 caracteres. Por favor, ingrese un cargo "
+                                  "más corto.")
                 return
 
             if SueldoBase.strip() == "":
@@ -134,14 +143,11 @@ class FormRegistrarNuevoTrabajador:
                 try:
                     SueldoBase = float(SueldoBase)
                     if SueldoBase > 15000:
-                        self.mostrarError("Error de validación", "El campo Sueldo Básico no debe ser mayor a 15000.00")
+                        self.mostrarError("Error de validación", "El Sueldo Básico no debe ser mayor a 15000.00")
                         return
                 except ValueError:
-                    self.mostrarError("Error de valor", f"El campo Sueldo Básico debe contener un número")
+                    self.mostrarError("Error de valor", "El campo 'Sueldo Básico' debe contener un número")
                     return
-
-            if Cargo.strip() == "":
-                campos_vacios.append("Cargo")
 
             if campos_vacios:
                 if len(campos_vacios) == 1:
@@ -156,7 +162,6 @@ class FormRegistrarNuevoTrabajador:
         except Exception as e:
             print(f"Surgió el siguiente error al registrar trabajador: {e}")
 
-
     def cancelar(self):
         self.parent.showMenuTrabajador()
 
@@ -165,7 +170,6 @@ class FormRegistrarNuevoTrabajador:
         self.RegistrarNuevoTrabajador.pushButton_Registrar.clicked.connect(self.registrar)
         self.RegistrarNuevoTrabajador.pushButton_Cancelar.clicked.connect(self.cancelar)
         self.RegistrarNuevoTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
-        # entrys
 
 
 class FormBuscarExistenteTrabajador:

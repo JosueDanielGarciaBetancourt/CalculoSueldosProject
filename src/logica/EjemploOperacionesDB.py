@@ -1,4 +1,4 @@
-from logica.Inserts import Insert
+from logica.Inserts import Insert, Mensajes
 from logica.Deletes import Delete
 from logica.Updates import Update
 from logica.Queries import Queries
