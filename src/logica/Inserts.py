@@ -8,7 +8,6 @@ from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
 from vista.Window_Utils import Mensajes
 
-
 class Insert:
     @staticmethod
     def insertMes(idMes, nombMes):
@@ -63,6 +62,7 @@ class Insert:
                     mensaje = "Se agregó el trabajador satisfactoriamente"
                     print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
                           f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
+                    OperacionesTablasGUI.updateAllTrabajadores()
                     #Mensajes.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")

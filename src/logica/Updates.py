@@ -40,3 +40,4 @@ class Update:
             except IntegrityError as e:
                 print(f"Error al actualizar valor de bonificación: {e}")
                 session.rollback()
+

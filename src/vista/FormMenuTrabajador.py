@@ -7,6 +7,7 @@ from logica.Deletes import Delete
 from logica.Updates import Update
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
+from PyQt6.QtWidgets import QTableWidgetItem
 
 directorio_ui = returnDirectorioGUI()
 
@@ -97,14 +98,6 @@ class FormRegistrarNuevoTrabajador:
     def ocultar(self):
         self.RegistrarNuevoTrabajador.close()
 
-    def mostrarError(self, titulo, mensaje):
-        errorBox = QMessageBox()
-        errorBox.setWindowTitle(titulo)
-        errorBox.setText(mensaje)
-        errorBox.setIcon(QMessageBox.Icon.Warning)
-        errorBox.setStandardButtons(QMessageBox.StandardButton.Ok)
-        errorBox.exec()
-
     def registrar(self):
         try:
             DNI = self.RegistrarNuevoTrabajador.inputDNI.text()
@@ -133,8 +126,8 @@ class FormRegistrarNuevoTrabajador:
                 campos_vacios.append("Cargo")
             elif len(Cargo) > 100:
                 Mensajes.mostrarError("Error de validación",
-                                      "El campo 'Cargo' no puede tener más de 100 caracteres. Por favor, ingrese un cargo "
-                                      "más corto.")
+                                      "El campo 'Cargo' no puede tener más de 100 caracteres. Por favor, ingrese un "
+                                      "cargo más corto.")
                 return
 
             if SueldoBase.strip() == "":
@@ -188,7 +181,7 @@ class FormBuscarExistenteTrabajador:
     def regresar(self):
         self.parent.showMenuTrabajador()
 
-    def viewInspeccionarTrabajador(self):
+    def buscarTrabajadorID(self):
         busquedaDNI = self.BuscarExistenteTrabajador.lineEditDNIBuscar.text()
         trabajadorBuscado = Queries.get_trabajador_by_id(busquedaDNI)
         if busquedaDNI.strip() == "":
@@ -201,12 +194,36 @@ class FormBuscarExistenteTrabajador:
             Mensajes.mostrarMensajeBusquedaExito(f"Trabajador con DNI: {busquedaDNI} encontrado")
             self.parent.showInspeccionarTrabajador()
 
+    def updateAllTrabajadores(self):
+        todos_los_trabajadores = Queries.get_all_trabajadores()
+        # Limpiar la tabla antes de llenarla para evitar duplicados
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setRowCount(0)
+
+        # Llenar la tabla con los trabajadores
+        for row, trabajador in enumerate(todos_los_trabajadores):
+            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.insertRow(row)
+            self.llenarFilaTablaTrabajador(row, trabajador)
+
+    def llenarFilaTablaTrabajador(self, row, trabajador):
+        # Crear items para cada columna
+        id_item = QTableWidgetItem(str(trabajador.IDTrabajador))
+        nombre_item = QTableWidgetItem(trabajador.trabNombreApellidos)
+        cargo_item = QTableWidgetItem(trabajador.Cargo)
+        sueldo_item = QTableWidgetItem(str(trabajador.trabSueldoBase))
+        fecha_creacion_item = QTableWidgetItem(str(trabajador.created_at))
+
+        # Establecer los items en la fila de la tabla
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 0, id_item)
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 1, nombre_item)
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 2, cargo_item)
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 3, sueldo_item)
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 4, fecha_creacion_item)
 
     def initGUI(self):
         self.BuscarExistenteTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
-        self.BuscarExistenteTrabajador.pushButtonInspeccionarTrabajador.clicked.connect(self.viewInspeccionarTrabajador)
+        self.BuscarExistenteTrabajador.pushButtonInspeccionarTrabajador.clicked.connect(self.buscarTrabajadorID)
         self.BuscarExistenteTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
-
+        self.updateAllTrabajadores()
 
 class FormInspeccionarTrabajador:
     def __init__(self, parent):

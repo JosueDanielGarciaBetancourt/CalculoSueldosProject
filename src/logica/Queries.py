@@ -27,6 +27,12 @@ class Queries:
             return trabajador
 
     @staticmethod
+    def get_all_trabajadores():
+        with Session() as session:
+            allTrabajadores = session.query(tblTrabajador).all()
+            return allTrabajadores
+
+    @staticmethod
     def get_detalle_mensual_trabajador_by_id(id_trabajador, id_mes):
         with Session() as session:
             detalle_mensual = session.query(tblDetalleMensualTrabajador).filter_by(IDTrabajador=id_trabajador,

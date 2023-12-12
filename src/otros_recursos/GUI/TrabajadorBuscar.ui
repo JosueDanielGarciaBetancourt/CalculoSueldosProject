@@ -53,10 +53,10 @@ color: white;</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>840</x>
       <y>0</y>
-      <width>141</width>
-      <height>71</height>
+      <width>71</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
@@ -75,15 +75,15 @@ color: white;}
 </string>
     </property>
     <property name="text">
-     <string>Fecha actual: </string>
+     <string>Fecha: </string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEditDNIBuscar">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>220</x>
       <y>70</y>
-      <width>721</width>
+      <width>401</width>
       <height>31</height>
      </rect>
     </property>
@@ -103,8 +103,8 @@ border-radius: 15px;
     </property>
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>20</y>
+      <x>920</x>
+      <y>10</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -122,46 +122,46 @@ border-radius: 15px;
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>22</hour>
+      <hour>3</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
       <month>10</month>
-      <day>29</day>
+      <day>30</day>
      </datetime>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>50</y>
-      <width>181</width>
-      <height>71</height>
+      <x>90</x>
+      <y>70</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Calibri</family>
-      <pointsize>15</pointsize>
-      <italic>false</italic>
+      <pointsize>14</pointsize>
+      <italic>true</italic>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 700 15pt &quot;Calibri&quot;;
+     <string notr="true">font: 700 Italic &quot;Calibri&quot;;
 color: white;
 </string>
     </property>
     <property name="text">
-     <string>Ingrese DNI/Nombre:</string>
+     <string>DNI/Nombre:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonInspeccionarTrabajador">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>460</y>
+      <x>30</x>
+      <y>480</y>
       <width>131</width>
       <height>51</height>
      </rect>
@@ -233,25 +233,69 @@ background-color: rgb(41, 11, 11);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tableTrabajadorEncontrado">
+   <widget class="QTableWidget" name="tableTrabajadoresRegistrados">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>210</x>
       <y>120</y>
-      <width>571</width>
-      <height>192</height>
+      <width>741</width>
+      <height>441</height>
      </rect>
     </property>
     <row>
      <property name="text">
-      <string>Nueva fila</string>
+      <string>12345687</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>11111111</string>
      </property>
     </row>
     <column>
      <property name="text">
-      <string>Nueva columna</string>
+      <string>ID</string>
      </property>
     </column>
+    <column>
+     <property name="text">
+      <string>Apellidos y nombres</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Cargo</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Sueldo base</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Fecha de creación</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>70</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>lupa.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
