@@ -4,6 +4,7 @@ from logica.Updates import Update
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
 
+
 def EjemploOperacionesDB():
     print("\n==============INSERTS==============")
     print("\nMESES")
@@ -32,7 +33,12 @@ def EjemploOperacionesDB():
     # Insertar trabajador
     Insert.insertTrabajador("77043114", "Josué García", 500.00, "CIO")
     Insert.insertTrabajador("12345678", "Sergio Ramírez", 700.00, "CIO2")
-    Insert.insertTrabajador("87654321", "Gian Piere", 1200.00, "CIO3")
+    Insert.insertTrabajador("12345672", "Manuel Romero", 1200.00, "CIO3")
+    Insert.insertTrabajador("12345661", "Emiliano Peralta", 1100.00, "CIO4")
+    Insert.insertTrabajador("12345662", "Jeison Oré", 1700.00, "CIO5")
+    Insert.insertTrabajador("12345400", "David Contreras", 1000.00, "CIO6")
+    Insert.insertTrabajador("12345401", "Eduardo Campos", 1500.00, "CIO7")
+    Insert.insertTrabajador("87654321", "Gian Piere", 1200.00, "CIO8")
 
     print("\nDETALLE MENSUAL TRABAJADOR")
     # Insertar detalle mensual trabajador

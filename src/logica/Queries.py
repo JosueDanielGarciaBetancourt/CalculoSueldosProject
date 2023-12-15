@@ -27,6 +27,25 @@ class Queries:
             return trabajador
 
     @staticmethod
+    def get_trabajadores_by_idPrefijo(idPrefijo):
+        with Session() as session:
+            trabajadores = session.query(tblTrabajador).filter(tblTrabajador.IDTrabajador.like(f"{idPrefijo}%")).all()
+            return trabajadores
+
+
+    @staticmethod
+    def get_trabajador_by_name(nomb_apell_Trabajador):
+        with Session() as session:
+            trabajador = session.query(tblTrabajador).filter_by(trabNombreApellidos=nomb_apell_Trabajador).first()
+            return trabajador
+
+    @staticmethod
+    def get_trabajadores_by_namePrefijo(namePrefijo):
+        with Session() as session:
+            trabajadores = session.query(tblTrabajador).filter(tblTrabajador.trabNombreApellidos.like(f"{namePrefijo}%")).all()
+            return trabajadores
+
+    @staticmethod
     def get_all_trabajadores():
         with Session() as session:
             allTrabajadores = session.query(tblTrabajador).all()

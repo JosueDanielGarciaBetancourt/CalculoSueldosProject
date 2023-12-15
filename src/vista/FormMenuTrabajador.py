@@ -1,3 +1,4 @@
+from sqlite3 import DatabaseError
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate
 from vista.Window_Utils import MensajesWindow
@@ -8,6 +9,7 @@ from logica.Updates import Update
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
 from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
+from sqlalchemy.exc import SQLAlchemyError
 
 directorio_ui = returnDirectorioGUI()
 
@@ -179,18 +181,53 @@ class FormBuscarExistenteTrabajador:
     def regresar(self):
         self.parent.showMenuTrabajador()
 
-    def buscarTrabajadorID(self):
-        busquedaDNI = self.BuscarExistenteTrabajador.lineEditDNIBuscar.text()
-        trabajadorBuscado = Queries.get_trabajador_by_id(busquedaDNI)
-        if busquedaDNI.strip() == "":
-            MensajesWindow.mostrarMensajeBusquedaError(f"Por favor ingrese el DNI del trabajador a inspeccionar")
-        elif not busquedaDNI.isdigit() or len(busquedaDNI) != 8:
-            MensajesWindow.mostrarMensajeBusquedaError("El DNI ingresado debe contener 8 cifras numéricas")
-        elif trabajadorBuscado is None:
-            MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajador con DNI: {busquedaDNI}")
-        else:
-            MensajesWindow.mostrarMensajeBusquedaExito(f"Trabajador con DNI: {busquedaDNI} encontrado")
-            self.parent.showInspeccionarTrabajador()
+    def mostrarGUITableTrabajadoresBuscados(self, trabajadoresBuscados):
+        # Limpiar la tabla antes de llenarla para evitar duplicados
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setRowCount(0)
+        # Llenar la tabla con los trabajadores
+        for row, trabajador in enumerate(trabajadoresBuscados):
+            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.insertRow(row)
+            self.fillRowGUITableTrabajadores(row, trabajador)
+
+    def buscarTrabajador_by_ID_nombre(self):
+        try:
+            busquedaDNI_Nombre = self.BuscarExistenteTrabajador.lineEditDNIBuscar.text()
+
+            if busquedaDNI_Nombre.strip() == "":
+                self.mostrarGUITableAllTrabajadores()
+                MensajesWindow.mostrarMensajeBusquedaError("Por favor ingrese el DNI/Nombre del trabajador a buscar")
+            elif busquedaDNI_Nombre.isdigit():
+                if len(busquedaDNI_Nombre) > 8:
+                    MensajesWindow.mostrarMensajeBusquedaError("El DNI ingresado debe contener 8 cifras numéricas "
+                                                               "como máximo")
+                else:
+                    trabajadoresBuscados_by_DNI = Queries.get_trabajadores_by_idPrefijo(busquedaDNI_Nombre)
+                    print(trabajadoresBuscados_by_DNI)
+                    if not trabajadoresBuscados_by_DNI:
+                        MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                    else:
+                        self.mostrarGUITableTrabajadoresBuscados(trabajadoresBuscados_by_DNI)
+            elif not busquedaDNI_Nombre.isdigit():
+                if len(busquedaDNI_Nombre) > 60:
+                    MensajesWindow.mostrarMensajeBusquedaError("El nombre ingresado no puede sobrepasar el límite de "
+                                                               "60 caracteres. Por favor ingresa un nombre más corto")
+                else:
+                    trabajadoresBuscados_by_name = Queries.get_trabajadores_by_namePrefijo(busquedaDNI_Nombre)
+                    print(trabajadoresBuscados_by_name)
+                    if not trabajadoresBuscados_by_name:
+                        MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                    else:
+                        self.mostrarGUITableTrabajadoresBuscados(trabajadoresBuscados_by_name)
+            else:
+                MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+        except ValueError as ve:
+            print(f"Error de valor al buscar el trabajador: {ve}")
+        except SQLAlchemyError as sae:
+            print(f"Error de SQLAlchemy al buscar el trabajador: {sae}")
+        except DatabaseError as de:
+            print(f"Error de base de datos al buscar el trabajador: {de}")
+        except Exception as e:
+            print(f"Ocurrió un error inesperado al buscar el trabajador: {e}")
 
     def fillRowGUITableTrabajadores(self, row, trabajador):
         # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
@@ -207,7 +244,7 @@ class FormBuscarExistenteTrabajador:
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 3, sueldo_item)
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 4, fecha_creacion_item)
 
-    def updateGUITableTrabajadores(self):
+    def mostrarGUITableAllTrabajadores(self):
         todos_los_trabajadores = Queries.get_all_trabajadores()
         # Limpiar la tabla antes de llenarla para evitar duplicados
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setRowCount(0)
@@ -217,32 +254,25 @@ class FormBuscarExistenteTrabajador:
             self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.insertRow(row)
             self.fillRowGUITableTrabajadores(row, trabajador)
 
-        # Ancho máximo deseado para la tabla
-        ancho_maximo = 1040
-
-        # Número de columnas
-        num_columnas = 5
-
-        # Calcular el ancho que cada columna debería tener para sumar el ancho máximo
-        ancho_columna = int(ancho_maximo / num_columnas)
-
-        # Establecer el ancho de cada columna
-        for col in range(num_columnas):
-            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setColumnWidth(col, ancho_columna)
+    def returnRowDNISelected(self):
+        try:
+            seleccionado = False
+            selectedRow = None
+            selectedDNI = None
+            # Obtiene el modelo de selección de la tabla
+            selection_model = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.selectionModel()
+            # Verifica si hay alguna celda seleccionada en el modelo de selección
+            if selection_model.hasSelection():
+                seleccionado = True
+                selectedRow = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.currentRow()
+                selectedDNI = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.item(selectedRow, 0).text()
+            return seleccionado, selectedRow, selectedDNI
+        except Exception as e:
+            print(e)
 
     def deleteRowGUITableIDTrabajador(self):
-        seleccionado = False
-        # Obtiene el modelo de selección de la tabla
-        selection_model = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.selectionModel()
-        # Verifica si hay alguna celda seleccionada en el modelo de selección
-        if selection_model.hasSelection():
-            seleccionado = True
-
+        seleccionado, selectedRow, selectedDNI = self.returnRowDNISelected()
         if seleccionado:
-            selectedRow = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.currentRow()
-            selectedDNI = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.item(selectedRow, 0).text()
-
-            print(selectedDNI)
             confirmacionEliminar = MensajesWindow.mostrarMensajeConfirmacion("Confirmación de eliminación",
                                                                              f"Se eliminará el trabajador con DNI {selectedDNI}. "
                                                                              f"¿Está seguro de eliminarlo?",
@@ -258,7 +288,6 @@ class FormBuscarExistenteTrabajador:
                     mensaje = f"Error inesperado al eliminar trabajador: {e}"
                     print(mensaje)
                     MensajesWindow.mostrarMensajeEliminarError(mensaje)
-            self.deseleccionarTabla()
         else:
             MensajesWindow.mostrarMensajeEliminarError("No se seleccionó trabajador. "
                                                        "Por favor seleccione un trabajador para eliminarlo")
@@ -269,16 +298,25 @@ class FormBuscarExistenteTrabajador:
     def initGUI(self):
         # Botones
         self.BuscarExistenteTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
-        self.BuscarExistenteTrabajador.pushButtonInspeccionarTrabajador.clicked.connect(self.buscarTrabajadorID)
         self.BuscarExistenteTrabajador.pushButtonEliminarTrabajador.clicked.connect(self.deleteRowGUITableIDTrabajador)
         self.BuscarExistenteTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
+        self.BuscarExistenteTrabajador.lineEditDNIBuscar.returnPressed.connect(self.buscarTrabajador_by_ID_nombre)
 
         # Tabla trabajadores GUI
-        self.updateGUITableTrabajadores()
-        Insert.signal.trabajadorInserted.connect(self.updateGUITableTrabajadores)
-        Delete.signal.trabajadorDeleted.connect(self.updateGUITableTrabajadores)
+        ancho_maximo = 1040
+        num_columnas = 5
+        # Calcular el ancho que cada columna
+        ancho_columna = int(ancho_maximo / num_columnas)
+        # Establecer el ancho de cada columna
+        for col in range(num_columnas):
+            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setColumnWidth(col, ancho_columna)
+
+        self.mostrarGUITableAllTrabajadores()
+        Insert.signal.trabajadorInserted.connect(self.mostrarGUITableAllTrabajadores)
+        Delete.signal.trabajadorDeleted.connect(self.mostrarGUITableAllTrabajadores)
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setEditTriggers(
             QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+
 
 class FormInspeccionarTrabajador:
     def __init__(self, parent):

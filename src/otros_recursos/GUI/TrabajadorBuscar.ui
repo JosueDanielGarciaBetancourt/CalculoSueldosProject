@@ -156,7 +156,7 @@ border-radius: 15px;
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>18</hour>
+      <hour>23</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
@@ -297,19 +297,40 @@ background-color: rgb(114, 90, 54);</string>
     <property name="whatsThis">
      <string/>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QHeaderView::section {
+   background-color: rgb(43, 69, 34);
+   color: white;
+}</string>
+    </property>
     <row>
      <property name="text">
       <string>1</string>
+     </property>
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
      </property>
     </row>
     <row>
      <property name="text">
       <string>2</string>
      </property>
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
+     </property>
     </row>
     <row>
      <property name="text">
       <string>3</string>
+     </property>
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
      </property>
     </row>
     <column>
