@@ -17,37 +17,48 @@ def center(window):
     window.move(qr.topLeft())
 
 
-class ConfirmacionDialog(QtWidgets.QMessageBox):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Advertencia")
-        self.setText("¿Seguro que desea eliminar esta fila?")
-        self.addButton("Sí", QtWidgets.QMessageBox.ButtonRole.YesRole)
-        self.addButton("No", QtWidgets.QMessageBox.ButtonRole.NoRole)
-
-
-class Mensajes:
+class MensajesWindow:
     @staticmethod
     def mostrarMensaje(titulo, mensaje, icono):
         msgBox = QMessageBox()
+        msgBox.setIcon(icono)
         msgBox.setWindowTitle(titulo)
         msgBox.setText(mensaje)
-        msgBox.setIcon(icono)
         msgBox.setStandardButtons(QMessageBox.StandardButton.Ok)
         msgBox.exec()
 
     @staticmethod
-    def mostrarMensajeRegistroExito(mensaje):
-        Mensajes.mostrarMensaje("Registro exitoso", mensaje, QMessageBox.Icon.Information)
+    def mostrarMensajeConfirmacion(titulo, mensaje, icon):
+        confirmBox = QMessageBox()
+        confirmBox.setIcon(icon)
+        confirmBox.setWindowTitle(titulo)
+        confirmBox.setText(mensaje)
+        confirmBox.addButton("Sí", QtWidgets.QMessageBox.ButtonRole.YesRole)
+        confirmBox.addButton("No", QtWidgets.QMessageBox.ButtonRole.NoRole)
+        confirmBox.exec()
+        return confirmBox.clickedButton().text()
 
     @staticmethod
-    def mostrarMensajeRegistroError(titulo, mensaje):
-        Mensajes.mostrarMensaje(titulo, mensaje, QMessageBox.Icon.Warning)
+    def mostrarMensajeRegistroExito(mensaje):
+        MensajesWindow.mostrarMensaje("Registro exitoso", mensaje, QMessageBox.Icon.Information)
+
+    @staticmethod
+    def mostrarMensajeRegistroError(mensaje):
+        MensajesWindow.mostrarMensaje("Registro fallido", mensaje, QMessageBox.Icon.Warning)
 
     @staticmethod
     def mostrarMensajeBusquedaExito(mensaje):
-        Mensajes.mostrarMensaje("Búsqueda exitosa", mensaje, QMessageBox.Icon.Information)
+        MensajesWindow.mostrarMensaje("Búsqueda exitosa", mensaje, QMessageBox.Icon.Information)
 
     @staticmethod
     def mostrarMensajeBusquedaError(mensaje):
-        Mensajes.mostrarMensaje("Error en la búsqueda", mensaje, QMessageBox.Icon.Warning)
+        MensajesWindow.mostrarMensaje("Error en la búsqueda", mensaje, QMessageBox.Icon.Warning)
+
+    @staticmethod
+    def mostrarMensajeEliminarExito(mensaje):
+        MensajesWindow.mostrarMensaje("Éxito al borrar", mensaje, QMessageBox.Icon.Information)
+
+    @staticmethod
+    def mostrarMensajeEliminarError(mensaje):
+        MensajesWindow.mostrarMensaje("Error al borrar", mensaje, QMessageBox.Icon.Warning)
+

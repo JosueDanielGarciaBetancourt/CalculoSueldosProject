@@ -3,9 +3,16 @@ from modelo.tblBonificacion import tblBonificacion
 from modelo.tblTrabajador import tblTrabajador
 from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
+from PyQt6.QtCore import pyqtSignal, QObject
+
+
+class DeleteSignal(QObject):
+    trabajadorDeleted = pyqtSignal()
 
 
 class Delete:
+    signal = DeleteSignal()
+
     @staticmethod
     def deleteMes(idMes):
         with Session() as session:
@@ -31,6 +38,7 @@ class Delete:
                     print(f"Se borrará el trabajador: {trabajador.trabNombreApellidos}")
                     session.delete(trabajador)
                     session.commit()
+                    Delete.signal.trabajadorDeleted.emit()
                     print("Trabajador borrado exitosamente.")
                 else:
                     print(f"No se encontró el trabajador con ID: {idTrabajador}")

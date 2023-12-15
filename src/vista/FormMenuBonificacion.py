@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate
 from PyQt6.QtWidgets import QMessageBox
-from vista.Window_Utils import center, ConfirmacionDialog, returnDirectorioGUI
+from vista.Window_Utils import center, MensajesWindow, returnDirectorioGUI
 
 directorio_ui = returnDirectorioGUI()
 
@@ -88,14 +88,11 @@ class FormBonificacionVerModificar:
 
     def verificarSeleccion(self):
         seleccionado = False
-
         # Obtiene el modelo de selección de la tabla
         selection_model = self.BonificacionVerModificar.tablaBonificaciones.selectionModel()
-
         # Verifica si hay alguna celda seleccionada en el modelo de selección
         if selection_model.hasSelection():
             seleccionado = True
-
         return seleccionado
 
     def agregarBonificacion(self):
@@ -108,21 +105,24 @@ class FormBonificacionVerModificar:
             self.BonificacionVerModificar.tablaBonificaciones.setItem(i, 3, item)
 
     def eliminarBonificacion(self):
-        if self.verificarSeleccion():
-            # Crea una instancia de la ventana de confirmación
-            confirmacion_dialog = ConfirmacionDialog(self.BonificacionVerModificar)
-
-            # Muestra el dialogo y guarda el botón que se presionó
-            confirmacion_dialog.exec()
-
-            # Si el botón presionado fue 'Sí', elimina la fila
-            if confirmacion_dialog.clickedButton().text() == "Sí":
-                selected_row = self.BonificacionVerModificar.tablaBonificaciones.currentRow()
-                self.BonificacionVerModificar.tablaBonificaciones.removeRow(selected_row)
-                self.deseleccionarTabla()
-        else:
-            # Muestra un mensaje o realiza alguna acción si no hay fila seleccionada
-            QMessageBox.warning(self.BonificacionVerModificar, "Advertencia", "Selecciona una fila antes de eliminar")
+        try:
+            if self.verificarSeleccion():
+                selectedRow = self.BonificacionVerModificar.tablaBonificaciones.currentRow()
+                selectedTipoBonificacion = self.BonificacionVerModificar.tablaBonificaciones.item(selectedRow, 1).text()
+                confirmacionEliminar = MensajesWindow.mostrarMensajeConfirmacion("Confirmación de eliminación",
+                                                                                 f"Se eliminará la bonificación {selectedTipoBonificacion}. "
+                                                                                 f"¿Está seguro de eliminarla?",
+                                                                                 QMessageBox.Icon.Question)
+                if confirmacionEliminar == "Sí":
+                    selected_row = self.BonificacionVerModificar.tablaBonificaciones.currentRow()
+                    self.BonificacionVerModificar.tablaBonificaciones.removeRow(selected_row)
+                    self.deseleccionarTabla()
+            else:
+                QMessageBox.warning(self.BonificacionVerModificar, "Advertencia", "Selecciona una fila antes de eliminar")
+        except Exception as e:
+            mensaje = f"Error inesperado al eliminar bonificación: {e}"
+            print(mensaje)
+            MensajesWindow.mostrarMensajeEliminarError(mensaje)
 
     def deseleccionarTabla(self):
         self.BonificacionVerModificar.tablaBonificaciones.clearSelection()

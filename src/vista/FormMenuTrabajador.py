@@ -1,13 +1,13 @@
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate
-from vista.Window_Utils import Mensajes
+from vista.Window_Utils import MensajesWindow
 from vista.Window_Utils import center, returnDirectorioGUI
-from logica.Inserts import Insert
+from logica.Inserts import Insert, InsertSignal
 from logica.Deletes import Delete
 from logica.Updates import Update
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
-from PyQt6.QtWidgets import QTableWidgetItem
+from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
 
 directorio_ui = returnDirectorioGUI()
 
@@ -111,23 +111,21 @@ class FormRegistrarNuevoTrabajador:
             if DNI.strip() == "":
                 campos_vacios.append("DNI")
             elif not DNI.isdigit() or len(DNI) != 8:
-                Mensajes.mostrarError("Error de validación", "El DNI debe contener 8 cifras numéricas")
+                MensajesWindow.mostrarMensajeRegistroError("El DNI debe contener 8 cifras numéricas")
                 return
 
             if ApellidosNombres.strip() == "":
                 campos_vacios.append("Apellidos y Nombres")
             elif len(ApellidosNombres) > 50:
-                Mensajes.mostrarError("Error de validación",
-                                      "El campo 'Apellidos y Nombres' no puede tener más de 50 caracteres. Por favor, "
-                                      "ingrese una información más corta.")
+                MensajesWindow.mostrarMensajeRegistroError("El campo 'Apellidos y Nombres' no puede tener más de 50 "
+                                                           "caracteres.Por favor, ingrese una información más corta.")
                 return
 
             if Cargo.strip() == "":
                 campos_vacios.append("Cargo")
             elif len(Cargo) > 100:
-                Mensajes.mostrarError("Error de validación",
-                                      "El campo 'Cargo' no puede tener más de 100 caracteres. Por favor, ingrese un "
-                                      "cargo más corto.")
+                MensajesWindow.mostrarMensajeRegistroError("El campo 'Cargo' no puede tener más de 100 caracteres."
+                                                           "Por favor, ingrese un cargo más corto.")
                 return
 
             if SueldoBase.strip() == "":
@@ -136,24 +134,24 @@ class FormRegistrarNuevoTrabajador:
                 try:
                     SueldoBase = float(SueldoBase)
                     if SueldoBase > 15000:
-                        Mensajes.mostrarError("Error de validación", "El Sueldo Básico no debe ser mayor a 15000.00")
+                        MensajesWindow.mostrarMensajeRegistroError("El Sueldo Básico no debe ser mayor a 15000.00")
                         return
                 except ValueError:
-                    Mensajes.mostrarError("Error de valor", "El campo 'Sueldo Básico' debe contener un número")
+                    MensajesWindow.mostrarMensajeRegistroError("El campo 'Sueldo Básico' debe contener un número")
                     return
 
             if campos_vacios:
                 if len(campos_vacios) == 1:
-                    mensaje = f"El campo {', '.join(campos_vacios)} está vacío"
+                    mensaje = f"El campo {''.join(campos_vacios)} está vacío"
                 else:
                     mensaje = f"Los campos: {', '.join(campos_vacios)} están vacíos"
-
-                Mensajes.mostrarError("Error de validación", mensaje)
+                MensajesWindow.mostrarMensajeRegistroError(mensaje)
             else:
                 Insert.insertTrabajador(DNI, ApellidosNombres, SueldoBase, Cargo)
-
         except Exception as e:
-            print(f"Surgió el siguiente error al registrar trabajador: {e}")
+            MensajesWindow.mostrarError("Error inesperado",
+                                        f"Surgió un error al registrar trabajador: {e}")
+            print(f"Surgió un error al registrar trabajador: {e}")
 
     def cancelar(self):
         self.parent.showMenuTrabajador()
@@ -185,30 +183,20 @@ class FormBuscarExistenteTrabajador:
         busquedaDNI = self.BuscarExistenteTrabajador.lineEditDNIBuscar.text()
         trabajadorBuscado = Queries.get_trabajador_by_id(busquedaDNI)
         if busquedaDNI.strip() == "":
-            Mensajes.mostrarMensajeBusquedaError(f"Por favor ingrese el DNI del trabajador a inspeccionar")
+            MensajesWindow.mostrarMensajeBusquedaError(f"Por favor ingrese el DNI del trabajador a inspeccionar")
         elif not busquedaDNI.isdigit() or len(busquedaDNI) != 8:
-            Mensajes.mostrarMensajeBusquedaError("El DNI ingresado debe contener 8 cifras numéricas")
+            MensajesWindow.mostrarMensajeBusquedaError("El DNI ingresado debe contener 8 cifras numéricas")
         elif trabajadorBuscado is None:
-            Mensajes.mostrarMensajeBusquedaError(f"No existe trabajador con DNI: {busquedaDNI}")
+            MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajador con DNI: {busquedaDNI}")
         else:
-            Mensajes.mostrarMensajeBusquedaExito(f"Trabajador con DNI: {busquedaDNI} encontrado")
+            MensajesWindow.mostrarMensajeBusquedaExito(f"Trabajador con DNI: {busquedaDNI} encontrado")
             self.parent.showInspeccionarTrabajador()
 
-    def updateAllTrabajadores(self):
-        todos_los_trabajadores = Queries.get_all_trabajadores()
-        # Limpiar la tabla antes de llenarla para evitar duplicados
-        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setRowCount(0)
-
-        # Llenar la tabla con los trabajadores
-        for row, trabajador in enumerate(todos_los_trabajadores):
-            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.insertRow(row)
-            self.llenarFilaTablaTrabajador(row, trabajador)
-
-    def llenarFilaTablaTrabajador(self, row, trabajador):
-        # Crear items para cada columna
+    def fillRowGUITableTrabajadores(self, row, trabajador):
+        # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
         id_item = QTableWidgetItem(str(trabajador.IDTrabajador))
-        nombre_item = QTableWidgetItem(trabajador.trabNombreApellidos)
-        cargo_item = QTableWidgetItem(trabajador.Cargo)
+        nombre_item = QTableWidgetItem(str(trabajador.trabNombreApellidos))
+        cargo_item = QTableWidgetItem(str(trabajador.Cargo))
         sueldo_item = QTableWidgetItem(str(trabajador.trabSueldoBase))
         fecha_creacion_item = QTableWidgetItem(str(trabajador.created_at))
 
@@ -219,11 +207,78 @@ class FormBuscarExistenteTrabajador:
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 3, sueldo_item)
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 4, fecha_creacion_item)
 
+    def updateGUITableTrabajadores(self):
+        todos_los_trabajadores = Queries.get_all_trabajadores()
+        # Limpiar la tabla antes de llenarla para evitar duplicados
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setRowCount(0)
+
+        # Llenar la tabla con los trabajadores
+        for row, trabajador in enumerate(todos_los_trabajadores):
+            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.insertRow(row)
+            self.fillRowGUITableTrabajadores(row, trabajador)
+
+        # Ancho máximo deseado para la tabla
+        ancho_maximo = 1040
+
+        # Número de columnas
+        num_columnas = 5
+
+        # Calcular el ancho que cada columna debería tener para sumar el ancho máximo
+        ancho_columna = int(ancho_maximo / num_columnas)
+
+        # Establecer el ancho de cada columna
+        for col in range(num_columnas):
+            self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setColumnWidth(col, ancho_columna)
+
+    def deleteRowGUITableIDTrabajador(self):
+        seleccionado = False
+        # Obtiene el modelo de selección de la tabla
+        selection_model = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.selectionModel()
+        # Verifica si hay alguna celda seleccionada en el modelo de selección
+        if selection_model.hasSelection():
+            seleccionado = True
+
+        if seleccionado:
+            selectedRow = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.currentRow()
+            selectedDNI = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.item(selectedRow, 0).text()
+
+            print(selectedDNI)
+            confirmacionEliminar = MensajesWindow.mostrarMensajeConfirmacion("Confirmación de eliminación",
+                                                                             f"Se eliminará el trabajador con DNI {selectedDNI}. "
+                                                                             f"¿Está seguro de eliminarlo?",
+                                                                             QMessageBox.Icon.Question)
+            if confirmacionEliminar == "Sí":
+                try:
+                    # Eliminar fila seleccionada de la tabla
+                    self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.removeRow(selectedRow)
+                    # Eliminar trabajador seleccionado de la BD
+                    Delete.deleteTrabajador(selectedDNI)
+                    MensajesWindow.mostrarMensajeEliminarExito(f"Se eliminó el trabajador con DNI: {selectedDNI}")
+                except Exception as e:
+                    mensaje = f"Error inesperado al eliminar trabajador: {e}"
+                    print(mensaje)
+                    MensajesWindow.mostrarMensajeEliminarError(mensaje)
+            self.deseleccionarTabla()
+        else:
+            MensajesWindow.mostrarMensajeEliminarError("No se seleccionó trabajador. "
+                                                       "Por favor seleccione un trabajador para eliminarlo")
+
+    def deseleccionarTabla(self):
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.clearSelection()
+
     def initGUI(self):
+        # Botones
         self.BuscarExistenteTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
         self.BuscarExistenteTrabajador.pushButtonInspeccionarTrabajador.clicked.connect(self.buscarTrabajadorID)
+        self.BuscarExistenteTrabajador.pushButtonEliminarTrabajador.clicked.connect(self.deleteRowGUITableIDTrabajador)
         self.BuscarExistenteTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
-        self.updateAllTrabajadores()
+
+        # Tabla trabajadores GUI
+        self.updateGUITableTrabajadores()
+        Insert.signal.trabajadorInserted.connect(self.updateGUITableTrabajadores)
+        Delete.signal.trabajadorDeleted.connect(self.updateGUITableTrabajadores)
+        self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setEditTriggers(
+            QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 
 class FormInspeccionarTrabajador:
     def __init__(self, parent):
@@ -243,4 +298,3 @@ class FormInspeccionarTrabajador:
 
     def initGUI(self):
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
-

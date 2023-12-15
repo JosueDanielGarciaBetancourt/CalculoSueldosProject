@@ -86,7 +86,7 @@ color: white;}
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>18</hour>
+      <hour>23</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
@@ -199,7 +199,7 @@ background-color: rgb(41, 11, 11);</string>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="mouseTracking">
@@ -275,7 +275,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="background">
@@ -292,7 +292,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="textAlignment">
@@ -315,7 +315,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
        <bold>true</bold>
        <underline>false</underline>
       </font>
@@ -330,7 +330,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
        <italic>false</italic>
        <bold>true</bold>
        <underline>false</underline>
@@ -351,7 +351,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
        <bold>true</bold>
        <underline>false</underline>
        <strikeout>false</strikeout>
@@ -365,7 +365,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
        <bold>true</bold>
        <underline>false</underline>
       </font>
@@ -377,7 +377,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="textAlignment">
@@ -390,7 +390,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="textAlignment">
@@ -427,7 +427,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="textAlignment">
@@ -448,7 +448,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="textAlignment">
@@ -469,7 +469,7 @@ color: black;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>12</pointsize>
       </font>
      </property>
      <property name="textAlignment">

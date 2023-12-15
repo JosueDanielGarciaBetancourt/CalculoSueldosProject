@@ -6,9 +6,17 @@ from modelo.tblBoletaPago import tblBoletaPago
 from modelo.tblDetalleBonificacion import tblDetalleBonificacion
 from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
-from vista.Window_Utils import Mensajes
+from vista.Window_Utils import MensajesWindow
+from PyQt6.QtCore import pyqtSignal, QObject
+
+
+class InsertSignal(QObject):
+    trabajadorInserted = pyqtSignal()
+
 
 class Insert:
+    signal = InsertSignal()
+
     @staticmethod
     def insertMes(idMes, nombMes):
         with Session() as session:
@@ -17,14 +25,14 @@ class Insert:
                 if existing_mes:
                     mensaje = f"El mes {idMes} ya existe en la base de datos."
                     print(mensaje)
-                    Mensajes.mostrarMensajeRegistroError("Error de registro", mensaje)
+                    # MensajesWindow.mostrarMensajeRegistroError("Error de registro", mensaje)
                 else:
                     mes = tblMes(IDMes=idMes, mesNombre=nombMes)
                     session.add(mes)
                     session.commit()
                     mensaje = "Se agregó el mes satisfactoriamente"
                     print(f"{mensaje}: \nID: {idMes}\nNombre: {nombMes}")
-                    #Mensajes.mostrarMensajeRegistroExito(mensaje)
+                    # MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error
@@ -51,9 +59,9 @@ class Insert:
             try:
                 existing_trabajador = session.query(tblTrabajador).get(idTrabajador)
                 if existing_trabajador:
-                    mensaje = f"El trabajador con ID {idTrabajador} ya existe en la base de datos."
+                    mensaje = f"El trabajador con DNI {idTrabajador} ya existe en la base de datos."
                     print(mensaje)
-                    Mensajes.mostrarMensajeRegistroError("Error de registro", mensaje)
+                    MensajesWindow.mostrarMensajeRegistroError(mensaje)
                 else:
                     trabajador = tblTrabajador(IDTrabajador=idTrabajador, trabNombreApellidos=trabaNombreApellidos,
                                                trabSueldoBase=trabaSueldoBase, Cargo=Cargo)
@@ -62,8 +70,8 @@ class Insert:
                     mensaje = "Se agregó el trabajador satisfactoriamente"
                     print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
                           f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
-                    OperacionesTablasGUI.updateAllTrabajadores()
-                    #Mensajes.mostrarMensajeRegistroExito(mensaje)
+                    Insert.signal.trabajadorInserted.emit()
+                    MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error

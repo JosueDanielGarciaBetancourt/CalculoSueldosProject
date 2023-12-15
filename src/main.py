@@ -1,3 +1,4 @@
+# TODO: Después de cada CRUD se debe actualizar la tabla de trabajadores GUI
 from logica.EjemploOperacionesDB import EjemploOperacionesDB
 from modelo.Declarative_Base import reiniciarDB
 from vista.GestorSueldos import GestorSueldos
