@@ -156,12 +156,12 @@ border-radius: 15px;
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>23</hour>
+      <hour>14</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
       <month>10</month>
-      <day>30</day>
+      <day>31</day>
      </datetime>
     </property>
    </widget>
@@ -335,7 +335,7 @@ background-color: rgb(114, 90, 54);</string>
     </row>
     <column>
      <property name="text">
-      <string>ID</string>
+      <string>ID/DNI</string>
      </property>
      <property name="font">
       <font>

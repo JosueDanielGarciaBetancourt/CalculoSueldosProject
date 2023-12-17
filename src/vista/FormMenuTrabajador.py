@@ -74,12 +74,12 @@ class FormMenuTrabajador:
         self.parent.showFormAcercaDeNosotros()
 
     def initGUI(self):
-        # botones
+        # Botones
         self.MenuTrabajador.pushButtonRegresar.clicked.connect(self.regresarMenuPrincipal)
         self.MenuTrabajador.pushButton_RegistrarNuevo.clicked.connect(self.irRegistrarTrabajador)
         self.MenuTrabajador.pushButton_BuscarExistente.clicked.connect(self.irBuscarTrabajador)
 
-        # menubar
+        # Menubar
         self.MenuTrabajador.actionInicio.triggered.connect(self.regresarMenuPrincipal)
         self.MenuTrabajador.actionBonificaciones.triggered.connect(self.irMenuBonificacion)
         self.MenuTrabajador.actionAcercaDeGestorDeSueldosV1.triggered.connect(self.viewFormAcercaDeGestorDeSueldosV1)
@@ -204,7 +204,8 @@ class FormBuscarExistenteTrabajador:
                     trabajadoresBuscados_by_DNI = Queries.get_trabajadores_by_idPrefijo(busquedaDNI_Nombre)
                     print(trabajadoresBuscados_by_DNI)
                     if not trabajadoresBuscados_by_DNI:
-                        MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                        MensajesWindow.mostrarMensajeBusquedaError(
+                            f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
                     else:
                         self.mostrarGUITableTrabajadoresBuscados(trabajadoresBuscados_by_DNI)
             elif not busquedaDNI_Nombre.isdigit():
@@ -215,11 +216,13 @@ class FormBuscarExistenteTrabajador:
                     trabajadoresBuscados_by_name = Queries.get_trabajadores_by_namePrefijo(busquedaDNI_Nombre)
                     print(trabajadoresBuscados_by_name)
                     if not trabajadoresBuscados_by_name:
-                        MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                        MensajesWindow.mostrarMensajeBusquedaError(
+                            f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
                     else:
                         self.mostrarGUITableTrabajadoresBuscados(trabajadoresBuscados_by_name)
             else:
-                MensajesWindow.mostrarMensajeBusquedaError(f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                MensajesWindow.mostrarMensajeBusquedaError(
+                    f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
         except ValueError as ve:
             print(f"Error de valor al buscar el trabajador: {ve}")
         except SQLAlchemyError as sae:
@@ -270,7 +273,7 @@ class FormBuscarExistenteTrabajador:
         except Exception as e:
             print(e)
 
-    def deleteRowGUITableIDTrabajador(self):
+    def deleteRowGUITableTrabajador(self):
         seleccionado, selectedRow, selectedDNI = self.returnRowDNISelected()
         if seleccionado:
             confirmacionEliminar = MensajesWindow.mostrarMensajeConfirmacion("Confirmación de eliminación",
@@ -292,20 +295,37 @@ class FormBuscarExistenteTrabajador:
             MensajesWindow.mostrarMensajeEliminarError("No se seleccionó trabajador. "
                                                        "Por favor seleccione un trabajador para eliminarlo")
 
+    def inspectRowGUITableTrabajador(self):
+        seleccionado, selectedRow, selectedDNI = self.returnRowDNISelected()
+        if seleccionado:
+            try:
+                trabajador = Queries.get_trabajador_by_id(selectedDNI)
+                self.parent.showInspeccionarTrabajador(trabajador)
+            except Exception as e:
+                mensaje = f"Ocurrió el siguiente error inesperado al inspeccionar trabajador: {e}"
+                print(mensaje)
+                MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
+        else:
+            MensajesWindow.mostrarMensajeEliminarError("No se seleccionó trabajador. "
+                                                       "Por favor seleccione un trabajador a inspeccionar")
+
     def deseleccionarTabla(self):
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.clearSelection()
 
     def initGUI(self):
         # Botones
         self.BuscarExistenteTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
-        self.BuscarExistenteTrabajador.pushButtonEliminarTrabajador.clicked.connect(self.deleteRowGUITableIDTrabajador)
+        self.BuscarExistenteTrabajador.pushButtonEliminarTrabajador.clicked.connect(self.deleteRowGUITableTrabajador)
+        self.BuscarExistenteTrabajador.pushButtonInspeccionarTrabajador.clicked.connect(
+            self.inspectRowGUITableTrabajador)
+
         self.BuscarExistenteTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
         self.BuscarExistenteTrabajador.lineEditDNIBuscar.returnPressed.connect(self.buscarTrabajador_by_ID_nombre)
 
         # Tabla trabajadores GUI
         ancho_maximo = 1040
         num_columnas = 5
-        # Calcular el ancho que cada columna
+        # Calcular el ancho de cada columna
         ancho_columna = int(ancho_maximo / num_columnas)
         # Establecer el ancho de cada columna
         for col in range(num_columnas):
@@ -321,11 +341,13 @@ class FormBuscarExistenteTrabajador:
 class FormInspeccionarTrabajador:
     def __init__(self, parent):
         self.parent = parent
+        self.trabajador = None   # Objeto trabajador a inspeccionar
         self.InspeccionarTrabajador = uic.loadUi(f"{directorio_ui}\\TrabajadorInspeccionar.ui")
         center(self.InspeccionarTrabajador)
         self.initGUI()
 
-    def mostrar(self):
+    def mostrar(self, trabajador):
+        self.trabajador = trabajador
         self.InspeccionarTrabajador.show()
 
     def ocultar(self):
@@ -335,4 +357,7 @@ class FormInspeccionarTrabajador:
         self.parent.showBuscarExistenteTrabajador()
 
     def initGUI(self):
+        # Botones
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
+
+        self.InspeccionarTrabajador.dateEditFechaActual.setDate(QDate.currentDate())

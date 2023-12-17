@@ -62,3 +62,6 @@ class MensajesWindow:
     def mostrarMensajeEliminarError(mensaje):
         MensajesWindow.mostrarMensaje("Error al borrar", mensaje, QMessageBox.Icon.Warning)
 
+    @staticmethod
+    def mostrarMensajeErrorInesperado(mensaje):
+        MensajesWindow.mostrarMensaje("Error inesperado", mensaje, QMessageBox.Icon.Critical)

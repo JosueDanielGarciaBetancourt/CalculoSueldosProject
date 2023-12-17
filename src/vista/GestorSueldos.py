@@ -7,6 +7,7 @@ from vista.FormMenuDetallesSW import FormMenuDetallesSW
 from vista.FormAcercaDeNosotros import FormAcercaDeNosotros
 from vista.FormAcercaDeGestorDeSueldosV1 import FormAcercaDeGestorDeSueldosV1
 
+
 class GestorSueldos:
     def __init__(self, app):
         self.app = app
@@ -124,7 +125,7 @@ class GestorSueldos:
         else:
             self.BuscarExistenteTrabajador.mostrar()
 
-    def showInspeccionarTrabajador(self):
+    def showInspeccionarTrabajador(self, trabajador):
         if self.MenuPrincipal is not None:
             self.MenuPrincipal.ocultar()
         if self.MenuBonificacion is not None:
@@ -145,7 +146,7 @@ class GestorSueldos:
         if self.InspeccionarTrabajador is None:
             self.InspeccionarTrabajador = FormInspeccionarTrabajador(self)
         else:
-            self.InspeccionarTrabajador.mostrar()
+            self.InspeccionarTrabajador.mostrar(trabajador)
 
     def showMenuBonificacion(self):
         if self.MenuPrincipal is not None:
@@ -246,4 +247,3 @@ class GestorSueldos:
         self.MenuTrabajador.deshabilitarBarraMenu()
         self.MenuBonificacion.deshabilitarBarraMenu()
         self.MenuDetallesSW.deshabilitarBarraMenu()
-
