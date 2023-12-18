@@ -205,7 +205,7 @@ class FormBuscarExistenteTrabajador:
                     print(trabajadoresBuscados_by_DNI)
                     if not trabajadoresBuscados_by_DNI:
                         MensajesWindow.mostrarMensajeBusquedaError(
-                            f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                            f"No existen trabajadores con DNI: {busquedaDNI_Nombre}")
                     else:
                         self.mostrarGUITableTrabajadoresBuscados(trabajadoresBuscados_by_DNI)
             elif not busquedaDNI_Nombre.isdigit():
@@ -217,12 +217,12 @@ class FormBuscarExistenteTrabajador:
                     print(trabajadoresBuscados_by_name)
                     if not trabajadoresBuscados_by_name:
                         MensajesWindow.mostrarMensajeBusquedaError(
-                            f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                            f"No existen trabajadores con Nombre: {busquedaDNI_Nombre}")
                     else:
                         self.mostrarGUITableTrabajadoresBuscados(trabajadoresBuscados_by_name)
             else:
                 MensajesWindow.mostrarMensajeBusquedaError(
-                    f"No existe trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
+                    f"No existen trabajadores con DNI/Nombre: {busquedaDNI_Nombre}")
         except ValueError as ve:
             print(f"Error de valor al buscar el trabajador: {ve}")
         except SQLAlchemyError as sae:
@@ -236,7 +236,7 @@ class FormBuscarExistenteTrabajador:
         # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
         id_item = QTableWidgetItem(str(trabajador.IDTrabajador))
         nombre_item = QTableWidgetItem(str(trabajador.trabNombreApellidos))
-        cargo_item = QTableWidgetItem(str(trabajador.Cargo))
+        cargo_item = QTableWidgetItem(str(trabajador.trabCargo))
         sueldo_item = QTableWidgetItem(str(trabajador.trabSueldoBase))
         fecha_creacion_item = QTableWidgetItem(str(trabajador.created_at))
 
@@ -261,7 +261,7 @@ class FormBuscarExistenteTrabajador:
         try:
             seleccionado = False
             selectedRow = None
-            selectedDNI = None
+            selectedDNI = ""
             # Obtiene el modelo de selección de la tabla
             selection_model = self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.selectionModel()
             # Verifica si hay alguna celda seleccionada en el modelo de selección
@@ -348,6 +348,12 @@ class FormInspeccionarTrabajador:
 
     def mostrar(self, trabajador):
         self.trabajador = trabajador
+        # Textos
+        self.InspeccionarTrabajador.labelDNI.setText(self.trabajador.IDTrabajador)
+        self.InspeccionarTrabajador.labelApeNomb.setText(self.trabajador.trabNombreApellidos)
+        self.InspeccionarTrabajador.labelCargo.setText(self.trabajador.trabCargo)
+        self.InspeccionarTrabajador.labelFechaCreacion.setText(str(self.trabajador.created_at))
+        self.InspeccionarTrabajador.labelSueldoBase.setText(str(self.trabajador.trabSueldoBase))
         self.InspeccionarTrabajador.show()
 
     def ocultar(self):
@@ -357,6 +363,9 @@ class FormInspeccionarTrabajador:
         self.parent.showBuscarExistenteTrabajador()
 
     def initGUI(self):
+        # Otros
+        self.InspeccionarTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
+
         # Botones
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
 
@@ -377,3 +386,4 @@ class FormInspeccionarTrabajador:
             self.InspeccionarTrabajador.tablaHistorialPagos.setColumnWidth(column, ancho_columna_TablaHistorialPagos)
 
         self.InspeccionarTrabajador.tablaDetallada.resizeColumnsToContents()
+

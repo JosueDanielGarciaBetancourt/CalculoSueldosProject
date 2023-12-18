@@ -64,7 +64,7 @@ class Insert:
                     MensajesWindow.mostrarMensajeRegistroError(mensaje)
                 else:
                     trabajador = tblTrabajador(IDTrabajador=idTrabajador, trabNombreApellidos=trabaNombreApellidos,
-                                               trabSueldoBase=trabaSueldoBase, Cargo=Cargo)
+                                               trabSueldoBase=trabaSueldoBase, trabCargo=Cargo)
                     session.add(trabajador)
                     session.commit()
                     mensaje = "Se agregó el trabajador satisfactoriamente"
@@ -73,10 +73,14 @@ class Insert:
                     Insert.signal.trabajadorInserted.emit()
                     MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
             except IntegrityError as e:
-                print(f"Error al agregar registro: {e}")
+                mensaje = f"Error al agregar registro: {e}"
+                print(mensaje)
+                MensajesWindow.mostrarMensajeRegistroError(mensaje)
                 session.rollback()  # Revertir cambios en caso de error
             except Exception as ex:
-                print(f"Excepcion: {ex}")
+                mensaje = f"INSERTS. Error al insertar trabajador {ex}"
+                print(mensaje)
+                MensajesWindow.mostrarMensajeRegistroError(mensaje)
 
     @staticmethod
     def insertDetalleMensualTrabajador(idTrabajador, idMes, horasExtras, minutosTardanzas,

@@ -109,6 +109,7 @@ def EjemploOperacionesDB():
     if trabajador:
         print("ID del Trabajador: ", trabajador.IDTrabajador)
         print("Nombre y Apellidos: ", trabajador.trabNombreApellidos)
+        print("Cargo: ", trabajador.trabCargo)
         print("Sueldo Base: ", trabajador.trabSueldoBase)
         print("Fecha de Creación: ", trabajador.created_at)
     else:
