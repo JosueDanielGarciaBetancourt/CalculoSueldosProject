@@ -8,7 +8,7 @@ from logica.Deletes import Delete
 from logica.Updates import Update
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
-from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
+from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox, QHeaderView
 from sqlalchemy.exc import SQLAlchemyError
 
 directorio_ui = returnDirectorioGUI()
@@ -341,7 +341,7 @@ class FormBuscarExistenteTrabajador:
 class FormInspeccionarTrabajador:
     def __init__(self, parent):
         self.parent = parent
-        self.trabajador = None   # Objeto trabajador a inspeccionar
+        self.trabajador = None  # Objeto trabajador a inspeccionar
         self.InspeccionarTrabajador = uic.loadUi(f"{directorio_ui}\\TrabajadorInspeccionar.ui")
         center(self.InspeccionarTrabajador)
         self.initGUI()
@@ -361,3 +361,19 @@ class FormInspeccionarTrabajador:
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
 
         self.InspeccionarTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
+
+        # Tablas
+        ancho_maximo = 1080
+        num_columnas_TablaResumen = 6
+        num_columnas_TablaHistorialPagos = 5
+
+        ancho_columna_TablaResumen = int(ancho_maximo / num_columnas_TablaResumen)
+        ancho_columna_TablaHistorialPagos = int(ancho_maximo / num_columnas_TablaHistorialPagos)
+
+        for col in range(num_columnas_TablaResumen):
+            self.InspeccionarTrabajador.tablaResumen.setColumnWidth(col, ancho_columna_TablaResumen)
+
+        for column in range(num_columnas_TablaHistorialPagos):
+            self.InspeccionarTrabajador.tablaHistorialPagos.setColumnWidth(column, ancho_columna_TablaHistorialPagos)
+
+        self.InspeccionarTrabajador.tablaDetallada.resizeColumnsToContents()

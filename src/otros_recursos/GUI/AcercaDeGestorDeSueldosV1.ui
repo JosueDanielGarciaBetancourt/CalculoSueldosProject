@@ -179,7 +179,7 @@ mensuales de sueldos de los trabajadores registrados.</string>
      </rect>
     </property>
     <property name="text">
-     <string>Permite el registro y la búsqueda de los trabajadores gestionar</string>
+     <string>Permite el registro y la búsqueda de los trabajadores a gestionar</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
@@ -259,7 +259,7 @@ mensuales de sueldos de los trabajadores registrados.</string>
      </rect>
     </property>
     <property name="text">
-     <string>Permite visualizar los detalles como desarrolladores, fecha de 
+     <string>Permite visualizar los detalles como: desarrolladores, fecha de 
 desarrollo y organización</string>
     </property>
    </widget>

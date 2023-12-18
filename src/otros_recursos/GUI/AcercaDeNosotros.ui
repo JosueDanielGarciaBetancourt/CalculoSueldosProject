@@ -137,15 +137,15 @@ color: black;</string>
      <rect>
       <x>30</x>
       <y>120</y>
-      <width>211</width>
+      <width>251</width>
       <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>Condori Huarcaya Gian Piere 
-Contreras Cerrón David 
-García Betancourt Josué 
-Torre Medina Raúl</string>
+     <string>Jefe de proyecto: García Betancourt Josué
+Programador: García Betancourt Josué
+Diseño e interfaz: García Betancourt Josué
+Pruebas: García Betancourt Josué</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -189,10 +189,10 @@ color: black;</string>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>150</y>
-      <width>171</width>
-      <height>171</height>
+      <x>240</x>
+      <y>190</y>
+      <width>141</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="text">
