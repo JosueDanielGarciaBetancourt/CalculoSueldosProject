@@ -86,7 +86,7 @@ color: white;}
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>4</hour>
+      <hour>19</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
@@ -206,7 +206,7 @@ background-color: rgb(41, 11, 11);</string>
      <bool>false</bool>
     </property>
     <property name="focusPolicy">
-     <enum>Qt::StrongFocus</enum>
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -382,10 +382,13 @@ color: black;</string>
      <property name="textAlignment">
       <set>AlignCenter</set>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="0" column="1">
      <property name="text">
-      <string>Factor por horas extra</string>
+      <string>Factor por horas extras</string>
      </property>
      <property name="font">
       <font>
@@ -411,6 +414,9 @@ color: black;</string>
      <property name="textAlignment">
       <set>AlignCenter</set>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="0" column="3">
      <property name="text">
@@ -418,6 +424,9 @@ color: black;</string>
      </property>
      <property name="textAlignment">
       <set>AlignCenter</set>
+     </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
      </property>
     </item>
     <item row="1" column="0">
@@ -432,6 +441,9 @@ color: black;</string>
      <property name="textAlignment">
       <set>AlignCenter</set>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="1" column="1">
      <property name="text">
@@ -439,6 +451,9 @@ color: black;</string>
      </property>
      <property name="textAlignment">
       <set>AlignCenter</set>
+     </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
      </property>
     </item>
     <item row="1" column="2">
@@ -453,6 +468,9 @@ color: black;</string>
      <property name="textAlignment">
       <set>AlignCenter</set>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="1" column="3">
      <property name="text">
@@ -460,6 +478,9 @@ color: black;</string>
      </property>
      <property name="textAlignment">
       <set>AlignCenter</set>
+     </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
      </property>
     </item>
     <item row="2" column="0">
@@ -474,13 +495,19 @@ color: black;</string>
      <property name="textAlignment">
       <set>AlignCenter</set>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="2" column="1">
      <property name="text">
-      <string>Factor de movilidad suplementaria</string>
+      <string>Factor suplementario</string>
      </property>
      <property name="textAlignment">
       <set>AlignCenter</set>
+     </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
      </property>
     </item>
     <item row="2" column="2">
@@ -495,6 +522,9 @@ color: black;</string>
      <property name="textAlignment">
       <set>AlignCenter</set>
      </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+     </property>
     </item>
     <item row="2" column="3">
      <property name="text">
@@ -502,6 +532,9 @@ color: black;</string>
      </property>
      <property name="textAlignment">
       <set>AlignCenter</set>
+     </property>
+     <property name="flags">
+      <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
      </property>
     </item>
    </widget>

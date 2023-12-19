@@ -1,7 +1,10 @@
+import re
 from PyQt6 import QtWidgets, uic
-from PyQt6.QtCore import QDate
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtCore import QDate, Qt
+from PyQt6.QtWidgets import QMessageBox, QTableWidgetItem
 from vista.Window_Utils import center, MensajesWindow, returnDirectorioGUI
+from logica.Queries import Queries
+from logica.Updates import Update
 
 directorio_ui = returnDirectorioGUI()
 
@@ -78,6 +81,8 @@ class FormBonificacionVerModificar:
         self.parent = parent
         self.BonificacionVerModificar = uic.loadUi(f"{directorio_ui}\BonificacionVerModificar.ui")
         center(self.BonificacionVerModificar)
+        self.tableColumnValorBoniEditable = False  # Variable para rastrear el estado de edición
+        self.original_values = []
         self.initGUI()
 
     def mostrar(self):
@@ -85,6 +90,9 @@ class FormBonificacionVerModificar:
 
     def ocultar(self):
         self.BonificacionVerModificar.close()
+
+    def regresar(self):
+        self.parent.showMenuBonificacion()
 
     def verificarSeleccion(self):
         seleccionado = False
@@ -98,11 +106,86 @@ class FormBonificacionVerModificar:
     def agregarBonificacion(self):
         pass
 
-    def modificarBonificacion(self):
-        # Hacer que la columna 3 sea editable
-        for i in range(self.BonificacionVerModificar.tablaBonificaciones.rowCount()):
-            item = QtWidgets.QTableWidgetItem()
-            self.BonificacionVerModificar.tablaBonificaciones.setItem(i, 3, item)
+    def enable_disable_edit_tableBonificacionescolumn3(self):
+        try:
+            self.tableColumnValorBoniEditable = not self.tableColumnValorBoniEditable
+            num_filas = self.BonificacionVerModificar.tablaBonificaciones.rowCount()
+            for fila in range(num_filas):
+                item = self.BonificacionVerModificar.tablaBonificaciones.item(fila, 3)
+                if self.tableColumnValorBoniEditable:
+                    item.setFlags(item.flags() | Qt.ItemFlag.ItemIsEditable)
+                else:
+                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+        except Exception as e:
+            mensaje = f"Ocurrió un error inesperado al intentar habilitar/deshabilitar la columna Valor, {e}"
+            print(mensaje)
+            MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
+
+    def modificarGUITableBonificacionesColumn3(self):
+        self.enable_disable_edit_tableBonificacionescolumn3()
+        # Guarda el valor original antes de intentar la modificación
+        print(self.tableColumnValorBoniEditable)
+        print()
+        num_filas = self.BonificacionVerModificar.tablaBonificaciones.rowCount()
+        try:
+            if self.tableColumnValorBoniEditable:
+                self.original_values = []
+                for fila in range(num_filas):
+                    valorAlmacenadoBonificacion = self.BonificacionVerModificar.tablaBonificaciones.item(fila, 3).text()
+                    print(valorAlmacenadoBonificacion)
+                    self.original_values.append(valorAlmacenadoBonificacion)
+            print(self.original_values)
+        except Exception as e:
+            print(f"Error inesperado al guardar valores iniciales {e}")
+
+        if not self.tableColumnValorBoniEditable:
+            try:
+                for fila in range(num_filas):
+                    valorBonificacion = self.BonificacionVerModificar.tablaBonificaciones.item(fila, 3).text()
+                    try:
+                        valorBonificacion = float(valorBonificacion)
+                    except ValueError:
+                        print("No se puede convertir a número")
+                        raise ValueError("No se puede convertir a número")
+
+                    if valorBonificacion <= 0:
+                        print("No se permiten valores menores o iguales a 0")
+                        raise ValueError("No se permiten valores menores o iguales a 0")
+
+                    if not re.match(r'^[0-9.]+$', str(valorBonificacion)):
+                        print("No se permiten valores que contengan letras")
+                        raise ValueError("No se permiten valores que contengan letras")
+
+                    print(f"Valor {valorBonificacion} de fila {fila + 1} bonificación almacenado correctamente")
+
+            except ValueError as e:
+                self.tableColumnValorBoniEditable = False
+                self.enable_disable_edit_tableBonificacionescolumn3()
+                try:
+                    print(self.original_values)
+                    for fila in range(num_filas):
+                        original_value_item = QTableWidgetItem(str(self.original_values[fila]))
+                        self.BonificacionVerModificar.tablaBonificaciones.setItem(fila, 3, original_value_item)
+                except Exception as e:
+                    print(e)
+                mensaje = f"Error inesperado al procesar los valores {valorBonificacion}: {e}, " \
+                          f"por favor ingreses valores numéricos"
+                print(mensaje)
+                MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
+            except Exception as e:
+                self.tableColumnValorBoniEditable = False
+                self.enable_disable_edit_tableBonificacionescolumn3()
+                try:
+                    print(self.original_values)
+                    for fila in range(num_filas):
+                        original_value_item = QTableWidgetItem(str(self.original_values[fila]))
+                        self.BonificacionVerModificar.tablaBonificaciones.setItem(fila, 3, original_value_item)
+                except Exception as e:
+                    print(e)
+                mensaje = f"Error inesperado al procesar los valores {valorBonificacion}: {e}, " \
+                          f"por favor ingreses valores numéricos"
+                print(mensaje)
+                MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
 
     def eliminarBonificacion(self):
         try:
@@ -118,7 +201,7 @@ class FormBonificacionVerModificar:
                     self.BonificacionVerModificar.tablaBonificaciones.removeRow(selected_row)
                     self.deseleccionarTabla()
             else:
-                QMessageBox.warning(self.BonificacionVerModificar, "Advertencia", "Selecciona una fila antes de eliminar")
+                MensajesWindow.mostrarMensajeEliminarError("Selecciona una fila antes de eliminar")
         except Exception as e:
             mensaje = f"Error inesperado al eliminar bonificación: {e}"
             print(mensaje)
@@ -127,21 +210,19 @@ class FormBonificacionVerModificar:
     def deseleccionarTabla(self):
         self.BonificacionVerModificar.tablaBonificaciones.clearSelection()
 
-    def regresar(self):
-        self.parent.showMenuBonificacion()
-
     def initGUI(self):
         self.BonificacionVerModificar.dateEditFechaActual.setDate(QDate.currentDate())
         self.BonificacionVerModificar.pushButtonNoSelection.clicked.connect(self.deseleccionarTabla)
 
         # botones
         self.BonificacionVerModificar.pushButton_AgregarBonificacion.clicked.connect(self.agregarBonificacion)
-        self.BonificacionVerModificar.pushButton_ModificarBonificacion.clicked.connect(self.modificarBonificacion)
+        self.BonificacionVerModificar.pushButton_ModificarBonificacion.clicked.connect(
+            self.modificarGUITableBonificacionesColumn3)
         self.BonificacionVerModificar.pushButton_EliminarBonificacion.clicked.connect(self.eliminarBonificacion)
         self.BonificacionVerModificar.pushButton_Regresar.clicked.connect(self.regresar)
 
         # tabla
         self.BonificacionVerModificar.tablaBonificaciones.resizeColumnsToContents()
         self.BonificacionVerModificar.tablaBonificaciones.resizeRowsToContents()
-        self.BonificacionVerModificar.tablaBonificaciones.setEditTriggers(
-            QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+
+        # En Qt Designer ya se realizó la deshabilitación de edición de todas las celdas

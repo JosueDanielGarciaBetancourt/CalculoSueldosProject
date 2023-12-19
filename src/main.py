@@ -1,5 +1,5 @@
+# TODO: Corregir validaciones de la tabla bonificaciones
 # TODO: Implementar el funcionamiento de ventana FormInspeccionarTrabajador
-# TODO: colocar bien lso datos del obj trabajador en la ventana inspeccionar
 # TODO: Implementar ordenamiento de tablas por ID y por Fechas
 # TODO: Implementar el funcionamiento de ventana FormBonificacionVerModificar
 # TODO: Después de cada CRUD se debe actualizar la tabla de trabajadores GUI

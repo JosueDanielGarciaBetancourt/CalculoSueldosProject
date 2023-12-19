@@ -626,7 +626,7 @@ color: black;</string>
     </item>
     <item row="0" column="1">
      <property name="text">
-      <string>Factor por horas extra</string>
+      <string>Factor por horas extras</string>
      </property>
      <property name="font">
       <font>

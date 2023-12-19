@@ -71,7 +71,7 @@ class Insert:
                     print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
                           f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
                     Insert.signal.trabajadorInserted.emit()
-                    MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
+                    #MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
             except IntegrityError as e:
                 mensaje = f"Error al agregar registro: {e}"
                 print(mensaje)
