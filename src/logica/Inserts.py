@@ -43,12 +43,17 @@ class Inserts:
             try:
                 existing_bonificacion = session.query(tblBonificacion).get(idBonificacion)
                 if existing_bonificacion:
-                    print(f"La bonificación {idBonificacion} ya existe en la base de datos.")
+                    mensaje = f"La bonificación {idBonificacion} ya existe en la base de datos."
+                    print(mensaje)
+                    MensajesWindow.mostrarMensajeRegistroError(mensaje)
                 else:
                     bonificacion = tblBonificacion(IDBonificacion=idBonificacion, bonTipo=boniTipo, bonValor=boniValor)
                     session.add(bonificacion)
                     session.commit()
-                    print(f"Se agregó la bonificación con ID: {idBonificacion}, Tipo: {boniTipo} y Valor: {boniValor}")
+                    mensaje = f"Se registró correctamente la bonificación\n ID: {idBonificacion}\n" \
+                              f" Tipo:  {boniTipo}\n Valor: {boniValor}\n "
+                    print(mensaje)
+                    MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error

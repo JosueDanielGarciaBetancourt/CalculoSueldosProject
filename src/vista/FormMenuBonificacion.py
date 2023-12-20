@@ -9,7 +9,6 @@ from logica.Inserts import Inserts
 from logica.Queries import Queries
 from logica.Updates import Updates
 from logica.Deletes import Deletes
-
 from src.logica import Deletes
 
 directorio_ui = returnDirectorioGUI()
@@ -158,7 +157,7 @@ class FormBonificacionVerModificar:
         self.BonificacionVerModificar.pushButton_AgregarBonificacion.setEnabled(True)
         self.actualizarContadorNumeroFilas()
         self.tableColumnValorBoniEditable = not self.tableColumnValorBoniEditable
-
+        print(f"Editable? {self.tableColumnValorBoniEditable}")
         try:
             if self.tableColumnValorBoniEditable:
                 self.BonificacionVerModificar.pushButton_AgregarBonificacion.setStyleSheet(
@@ -183,6 +182,7 @@ class FormBonificacionVerModificar:
                                                                               0)
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             else:
+                self.actualizarContadorNumeroFilas()
                 self.BonificacionVerModificar.pushButton_AgregarBonificacion.setStyleSheet(
                     "font: 700 15pt 'Calibri';"
                     "color: white;"
@@ -203,17 +203,16 @@ class FormBonificacionVerModificar:
                     nuevoTipoBonificacion = listaValoresCamposUltimaFila[1]
                     nuevaUnidadBonificacion = listaValoresCamposUltimaFila[2]
                     nuevoValorBonificacion = listaValoresCamposUltimaFila[3]
+
+                    Inserts.insertBonificacion(nuevoIDBonificacion, nuevoTipoBonificacion, float(nuevoValorBonificacion))
+
                     for columna, dato in enumerate(listaValoresCamposUltimaFila):
                         itemNuevaFila = QTableWidgetItem(str(dato))
                         itemNuevaFila.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
                         self.BonificacionVerModificar.tablaBonificaciones.setItem(self.num_filasGUITableBonificaciones - 1,
                                                                                   columna, itemNuevaFila)
-                    Inserts.insertBonificacion(nuevoIDBonificacion, nuevoTipoBonificacion, float(nuevoValorBonificacion))
                     self.disable_edit_tableBonificacionesRow(self.num_filasGUITableBonificaciones)
-                    MensajesWindow.mostrarMensajeRegistroExito(f"Se registró correctamente la bonificación\n"
-                                                               f"ID: {nuevoIDBonificacion}\n"
-                                                               f"Tipo:  {nuevoTipoBonificacion}\n"
-                                                               f"Valor: {nuevoValorBonificacion}\n")
+                    self.tableColumnValorBoniEditable = False
                 else:
                     self.BonificacionVerModificar.pushButton_AgregarBonificacion.setStyleSheet(
                         "font: 700 15pt 'Calibri';"
@@ -222,6 +221,9 @@ class FormBonificacionVerModificar:
                         "border-radius: 15px;"
                         "background-color: rgb(41, 11, 11);")
                     self.BonificacionVerModificar.pushButton_AgregarBonificacion.setText("Guardar cambios")
+                    self.BonificacionVerModificar.pushButton_ModificarBonificacion.setEnabled(False)
+                    self.BonificacionVerModificar.pushButtonRegresar.setEnabled(False)
+                    self.BonificacionVerModificar.pushButton_EliminarBonificacion.setEnabled(False)
                     self.tableColumnValorBoniEditable = True
                     MensajesWindow.mostrarMensajeRegistroError("Por favor, ingrese todos los campos")
         except Exception as e:
@@ -232,6 +234,7 @@ class FormBonificacionVerModificar:
     def enable_disable_edit_tableBonificacionesColumn3(self):
         try:
             self.tableColumnValorBoniEditable = not self.tableColumnValorBoniEditable
+            self.actualizarContadorNumeroFilas()
             for fila in range(self.num_filasGUITableBonificaciones):
                 item = self.BonificacionVerModificar.tablaBonificaciones.item(fila, 3)
                 if self.tableColumnValorBoniEditable:
@@ -288,7 +291,7 @@ class FormBonificacionVerModificar:
         except Exception as e:
             print(f"Error: {e}")
 
-        # Guardar el valor original antes de intentar la modificación
+        # Guardar los valores originales antes de intentar la modificación
         try:
             if self.tableColumnValorBoniEditable:
                 self.original_values = []
@@ -298,7 +301,7 @@ class FormBonificacionVerModificar:
                     self.original_values.append(valorAlmacenadoBonificacion)
             print(self.original_values)
         except Exception as e:
-            print(f"Error inesperado al guardar valores iniciales {e}")
+            print(f"Error inesperado al guardar valores originales {e}")
 
         # Modificar los valores en la columna 3 "Valor" de la tabla bonificaciones de la GUI
         if not self.tableColumnValorBoniEditable:
@@ -371,7 +374,7 @@ class FormBonificacionVerModificar:
                                                                                      f"¿Está seguro de eliminarla?",
                                                                                      QMessageBox.Icon.Question)
                     if confirmacionEliminar == "Sí":
-                        Deletes.deleteBonificacion(selectedIDBonificacion)
+                        Deletes.Deletes.deleteBonificacion(selectedIDBonificacion)
                         selected_row = self.BonificacionVerModificar.tablaBonificaciones.currentRow()
                         self.BonificacionVerModificar.tablaBonificaciones.removeRow(selected_row)
                         self.deseleccionarTabla()
