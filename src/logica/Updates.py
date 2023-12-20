@@ -4,7 +4,7 @@ from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
 
 
-class Update:
+class Updates:
     @staticmethod
     def updateSueldoBase(idTrabajador, nuevoSueldoBase):
         with Session() as session:

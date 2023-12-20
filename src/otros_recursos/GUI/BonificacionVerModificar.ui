@@ -33,68 +33,6 @@
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(50, 53, 1, 255));}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>0</y>
-      <width>141</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Calibri</family>
-      <pointsize>18</pointsize>
-      <italic>false</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QWidget#label_2{
-font: 700 18pt &quot;Calibri&quot;;
-color: white;}
-
-</string>
-    </property>
-    <property name="text">
-     <string>Fecha actual: </string>
-    </property>
-   </widget>
-   <widget class="QDateEdit" name="dateEditFechaActual">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>930</x>
-      <y>20</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="cursor">
-     <cursorShape>ArrowCursor</cursorShape>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="dateTime">
-     <datetime>
-      <hour>19</hour>
-      <minute>0</minute>
-      <second>0</second>
-      <year>2023</year>
-      <month>11</month>
-      <day>4</day>
-     </datetime>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
@@ -124,17 +62,20 @@ color: white;
    <widget class="QPushButton" name="pushButton_AgregarBonificacion">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>170</y>
+      <x>760</x>
+      <y>230</y>
       <width>181</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 700 15pt &quot;Calibri&quot;;
+     <string notr="true">font: 700 15pt 'Calibri';
 color: white;
 border: 1px solid white;
 border-radius: 15px;
@@ -147,21 +88,24 @@ background-color: rgb(52, 50, 125);</string>
    <widget class="QPushButton" name="pushButton_EliminarBonificacion">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>290</y>
+      <x>760</x>
+      <y>360</y>
       <width>191</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 700 15pt &quot;Calibri&quot;;
+     <string notr="true">font: 700 15pt 'Calibri';
 color: white;
 border: 1px solid white;
-border-radius: 20px;
-background-color: rgb(41, 11, 11);</string>
+border-radius: 15px;
+background-color: rgb(52, 50, 125);</string>
     </property>
     <property name="text">
      <string>Eliminar bonificación</string>
@@ -175,8 +119,8 @@ background-color: rgb(41, 11, 11);</string>
      <rect>
       <x>40</x>
       <y>80</y>
-      <width>501</width>
-      <height>151</height>
+      <width>471</width>
+      <height>300</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -187,14 +131,14 @@ background-color: rgb(41, 11, 11);</string>
     </property>
     <property name="minimumSize">
      <size>
-      <width>425</width>
-      <height>125</height>
+      <width>471</width>
+      <height>140</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>550</width>
-      <height>500</height>
+      <width>480</width>
+      <height>300</height>
      </size>
     </property>
     <property name="font">
@@ -372,7 +316,7 @@ color: black;</string>
     </column>
     <item row="0" column="0">
      <property name="text">
-      <string>1</string>
+      <string>BONI01</string>
      </property>
      <property name="font">
       <font>
@@ -431,7 +375,7 @@ color: black;</string>
     </item>
     <item row="1" column="0">
      <property name="text">
-      <string>2</string>
+      <string>BONI02</string>
      </property>
      <property name="font">
       <font>
@@ -485,7 +429,7 @@ color: black;</string>
     </item>
     <item row="2" column="0">
      <property name="text">
-      <string>3</string>
+      <string>BONI03</string>
      </property>
      <property name="font">
       <font>
@@ -538,7 +482,7 @@ color: black;</string>
      </property>
     </item>
    </widget>
-   <widget class="QPushButton" name="pushButton_Regresar">
+   <widget class="QPushButton" name="pushButtonRegresar">
     <property name="geometry">
      <rect>
       <x>1010</x>
@@ -570,17 +514,20 @@ color: black;</string>
    <widget class="QPushButton" name="pushButton_ModificarBonificacion">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>230</y>
+      <x>760</x>
+      <y>290</y>
       <width>191</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 700 15pt &quot;Calibri&quot;;
+     <string notr="true">font: 700 15pt 'Calibri';
 color: white;
 border: 1px solid white;
 border-radius: 15px;
@@ -596,7 +543,7 @@ background-color: rgb(52, 50, 125);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>10</y>
       <width>1061</width>
       <height>581</height>
@@ -636,15 +583,171 @@ background-color: rgb(52, 50, 125);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>10</y>
+      <width>181</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: transparent;</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QDateEdit" name="dateEditFechaActual">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>0</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>ArrowCursor</cursorShape>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="correctionMode">
+      <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
+     </property>
+     <property name="keyboardTracking">
+      <bool>true</bool>
+     </property>
+     <property name="showGroupSeparator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="dateTime">
+      <datetime>
+       <hour>19</hour>
+       <minute>0</minute>
+       <second>0</second>
+       <year>2023</year>
+       <month>12</month>
+       <day>17</day>
+      </datetime>
+     </property>
+     <property name="displayFormat">
+      <string>dd/MM/yyyy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>false</bool>
+     </property>
+     <property name="timeSpec">
+      <enum>Qt::TimeZone</enum>
+     </property>
+     <property name="date">
+      <date>
+       <year>2023</year>
+       <month>12</month>
+       <day>17</day>
+      </date>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>-10</y>
+       <width>121</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#label_2{
+font: 700 12pt &quot;Calibri&quot;;
+color:  rgb(255, 255, 255);}
+
+</string>
+     </property>
+     <property name="text">
+      <string>Fecha actual: </string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_InstruccionModificar">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>100</y>
+      <width>371</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <italic>true</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+    <property name="text">
+     <string>Ahora puede modificar el valor de las bonificaciones 
+directamente en la tabla</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_InstruccionAgregar">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>100</y>
+      <width>261</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <italic>true</italic>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+    <property name="text">
+     <string>Ahora puede agregar bonificaciones 
+en la nueva fila</string>
+    </property>
+   </widget>
+   <zorder>label_InstruccionModificar</zorder>
    <zorder>pushButtonNoSelection</zorder>
-   <zorder>label_2</zorder>
-   <zorder>dateEditFechaActual</zorder>
    <zorder>label_10</zorder>
    <zorder>pushButton_AgregarBonificacion</zorder>
    <zorder>pushButton_EliminarBonificacion</zorder>
    <zorder>tablaBonificaciones</zorder>
-   <zorder>pushButton_Regresar</zorder>
+   <zorder>pushButtonRegresar</zorder>
    <zorder>pushButton_ModificarBonificacion</zorder>
+   <zorder>groupBox_3</zorder>
+   <zorder>label_InstruccionAgregar</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

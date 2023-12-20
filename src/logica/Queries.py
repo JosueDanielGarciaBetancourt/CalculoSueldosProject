@@ -5,6 +5,7 @@ from modelo.tblDetalleMensualTrabajador import tblDetalleMensualTrabajador
 from modelo.tblBoletaPago import tblBoletaPago
 from modelo.tblDetalleBonificacion import tblDetalleBonificacion
 from modelo.Declarative_Base import Session
+from sqlalchemy import func
 
 
 class Queries:
@@ -19,6 +20,19 @@ class Queries:
         with Session() as session:
             bonificacion = session.query(tblBonificacion).filter_by(IDBonificacion=id_bonificacion).first()
             return bonificacion
+
+    @staticmethod
+    def get_last_bonification():
+        with Session() as session:
+            # Ordena las bonificaciones por ID de manera descendente y toma la primera
+            bonificacion = session.query(tblBonificacion).order_by(tblBonificacion.IDBonificacion.desc()).first()
+            return bonificacion
+
+    @staticmethod
+    def get_num_bonificaciones():
+        with Session() as session:
+            num_bonificaciones = session.query(func.count(tblBonificacion.IDBonificacion)).scalar()
+            return num_bonificaciones
 
     @staticmethod
     def get_trabajador_by_id(id_trabajador):

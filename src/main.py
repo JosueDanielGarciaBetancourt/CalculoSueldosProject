@@ -1,7 +1,8 @@
-# TODO: Corregir validaciones de la tabla bonificaciones
+# TODO: Corregir bugs de agregar, modificar y  eliminar en su conjunto e individualmente
+# TODO: Agregar nuevaUnidadBonificacion a tblBonificacion
 # TODO: Implementar el funcionamiento de ventana FormInspeccionarTrabajador
 # TODO: Implementar ordenamiento de tablas por ID y por Fechas
-# TODO: Implementar el funcionamiento de ventana FormBonificacionVerModificar
+# TODO: Implementar justificaciones
 # TODO: Después de cada CRUD se debe actualizar la tabla de trabajadores GUI
 
 from logica.EjemploOperacionesDB import EjemploOperacionesDB

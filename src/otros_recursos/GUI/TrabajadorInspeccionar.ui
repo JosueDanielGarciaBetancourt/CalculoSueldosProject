@@ -4108,7 +4108,7 @@ color: rgb(211,190,10);</string>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>1020</x>
+      <x>1015</x>
       <y>10</y>
       <width>181</width>
       <height>21</height>

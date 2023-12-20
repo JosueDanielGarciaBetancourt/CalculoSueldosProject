@@ -14,7 +14,7 @@ class InsertSignal(QObject):
     trabajadorInserted = pyqtSignal()
 
 
-class Insert:
+class Inserts:
     signal = InsertSignal()
 
     @staticmethod
@@ -48,7 +48,7 @@ class Insert:
                     bonificacion = tblBonificacion(IDBonificacion=idBonificacion, bonTipo=boniTipo, bonValor=boniValor)
                     session.add(bonificacion)
                     session.commit()
-                    print(f"Se agregó la bonificación: {idBonificacion} {boniTipo} {boniValor}")
+                    print(f"Se agregó la bonificación con ID: {idBonificacion}, Tipo: {boniTipo} y Valor: {boniValor}")
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error
@@ -70,7 +70,7 @@ class Insert:
                     mensaje = "Se agregó el trabajador satisfactoriamente"
                     print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
                           f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
-                    Insert.signal.trabajadorInserted.emit()
+                    Inserts.signal.trabajadorInserted.emit()
                     #MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
             except IntegrityError as e:
                 mensaje = f"Error al agregar registro: {e}"

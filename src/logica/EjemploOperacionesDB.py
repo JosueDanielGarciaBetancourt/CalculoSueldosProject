@@ -1,6 +1,6 @@
-from logica.Inserts import Insert, MensajesWindow
-from logica.Deletes import Delete
-from logica.Updates import Update
+from logica.Inserts import Inserts, MensajesWindow
+from logica.Deletes import Deletes
+from logica.Updates import Updates
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
 
@@ -10,61 +10,61 @@ def EjemploOperacionesDB():
     print("\nMESES")
 
     # Insertar meses
-    Insert.insertMes("MES01", "ENERO")
-    Insert.insertMes("MES02", "FEBRERO")
-    Insert.insertMes("MES03", "MARZO")
-    Insert.insertMes("MES04", "ABRIL")
-    Insert.insertMes("MES05", "MAYO")
-    Insert.insertMes("MES06", "JUNIO")
-    Insert.insertMes("MES07", "JULIO")
-    Insert.insertMes("MES08", "AGOSTO")
-    Insert.insertMes("MES09", "SEPTIEMBRE")
-    Insert.insertMes("MES10", "OCTUBRE")
-    Insert.insertMes("MES11", "NOVIEMBRE")
-    Insert.insertMes("MES12", "DICIEMBRE")
+    Inserts.insertMes("MES01", "ENERO")
+    Inserts.insertMes("MES02", "FEBRERO")
+    Inserts.insertMes("MES03", "MARZO")
+    Inserts.insertMes("MES04", "ABRIL")
+    Inserts.insertMes("MES05", "MAYO")
+    Inserts.insertMes("MES06", "JUNIO")
+    Inserts.insertMes("MES07", "JULIO")
+    Inserts.insertMes("MES08", "AGOSTO")
+    Inserts.insertMes("MES09", "SEPTIEMBRE")
+    Inserts.insertMes("MES10", "OCTUBRE")
+    Inserts.insertMes("MES11", "NOVIEMBRE")
+    Inserts.insertMes("MES12", "DICIEMBRE")
 
     print("\nBONIFICACIONES")
     # Insertar bonificaciones
-    Insert.insertBonificacion("BONI01", "Factor por horas extras", 0.50)
-    Insert.insertBonificacion("BONI02", "Movilidad", 1000.00)
-    Insert.insertBonificacion("BONI03", "Factor de bonificación suplementaria", 0.03)
+    Inserts.insertBonificacion("BONI01", "Factor por horas extras", 0.50)
+    Inserts.insertBonificacion("BONI02", "Movilidad", 1000.00)
+    Inserts.insertBonificacion("BONI03", "Factor de bonificación suplementaria", 0.03)
 
     print("\nTRABAJADORES")
     # Insertar trabajador
-    Insert.insertTrabajador("77043114", "Josué García", 500.00, "CIO")
-    Insert.insertTrabajador("12345678", "Sergio Ramírez", 700.00, "CIO2")
-    Insert.insertTrabajador("12345672", "Manuel Romero", 1200.00, "CIO3")
-    Insert.insertTrabajador("12345661", "Emiliano Peralta", 1100.00, "CIO4")
-    Insert.insertTrabajador("12345662", "Jeison Oré", 1700.00, "CIO5")
-    Insert.insertTrabajador("12345400", "David Contreras", 1000.00, "CIO6")
-    Insert.insertTrabajador("12345401", "Eduardo Campos", 1500.00, "CIO7")
-    Insert.insertTrabajador("87654321", "Gian Piere", 1200.00, "CIO8")
+    Inserts.insertTrabajador("77043114", "Josué García", 500.00, "CIO")
+    Inserts.insertTrabajador("12345678", "Sergio Ramírez", 700.00, "CIO2")
+    Inserts.insertTrabajador("12345672", "Manuel Romero", 1200.00, "CIO3")
+    Inserts.insertTrabajador("12345661", "Emiliano Peralta", 1100.00, "CIO4")
+    Inserts.insertTrabajador("12345662", "Jeison Oré", 1700.00, "CIO5")
+    Inserts.insertTrabajador("12345400", "David Contreras", 1000.00, "CIO6")
+    Inserts.insertTrabajador("12345401", "Eduardo Campos", 1500.00, "CIO7")
+    Inserts.insertTrabajador("87654321", "Gian Piere", 1200.00, "CIO8")
 
     print("\nDETALLE MENSUAL TRABAJADOR")
     # Insertar detalle mensual trabajador
-    Insert.insertDetalleMensualTrabajador("77043114", "MES11", 3, 60, 30, 1, 1, 2000.00)
-    Insert.insertDetalleMensualTrabajador("77043114", "MES12", 3, 60, 30, 1, 1, 2000.00)
-    Insert.insertDetalleMensualTrabajador("12345678", "MES05", 3, 60, 30, 1, 1, 2000.00)
+    Inserts.insertDetalleMensualTrabajador("77043114", "MES11", 3, 60, 30, 1, 1, 2000.00)
+    Inserts.insertDetalleMensualTrabajador("77043114", "MES12", 3, 60, 30, 1, 1, 2000.00)
+    Inserts.insertDetalleMensualTrabajador("12345678", "MES05", 3, 60, 30, 1, 1, 2000.00)
 
     print("\nBOLETA DE PAGO")
     # Insertar boleta pago
-    Insert.insertBoletaPago("BOLE0177043114", "77043114", 2000.00, 200.00, 1700.00)
-    Insert.insertBoletaPago("BOLE0112345678", "12345678", 2000.00, 200.00, 1700.00)
+    Inserts.insertBoletaPago("BOLE0177043114", "77043114", 2000.00, 200.00, 1700.00)
+    Inserts.insertBoletaPago("BOLE0112345678", "12345678", 2000.00, 200.00, 1700.00)
 
     print("\nDETALLE BONIFICACIÓN")
     # Insertar detalle de bonificación
-    Insert.insertDetalleBonificacion("BONI01", "BOLE0177043114", 250.00)
-    Insert.insertDetalleBonificacion("BONI02", "BOLE0177043114", 1000.00)
-    Insert.insertDetalleBonificacion("BONI03", "BOLE0112345678", 750.00)
+    Inserts.insertDetalleBonificacion("BONI01", "BOLE0177043114", 250.00)
+    Inserts.insertDetalleBonificacion("BONI02", "BOLE0177043114", 1000.00)
+    Inserts.insertDetalleBonificacion("BONI03", "BOLE0112345678", 750.00)
 
     print("\n==============DELETES==============")
     print("\nMES")
     # Eliminando un mes
-    Delete.deleteMes("MES12")
+    Deletes.deleteMes("MES12")
 
     print("\nTRABAJADOR")
     # Eliminando un trabajador (esto borrará registros en boletaPago)
-    Delete.deleteTrabajador("77043114")
+    Deletes.deleteTrabajador("77043114")
 
     print("\nBONIFICACIÓN")
     # Eliminando una bonificación (esto borrará registros en detalleBonificacion)
@@ -73,10 +73,10 @@ def EjemploOperacionesDB():
     print("\n==============UPDATES==============")
 
     print("\nSUELDO BASE")
-    Update.updateSueldoBase("12345678", 100)
+    Updates.updateSueldoBase("12345678", 100)
 
     print("\nBONIFICACIÓN")
-    Update.updateValorBonificacion("BONI01", 0.6)
+    Updates.updateValorBonificacion("BONI01", 0.6)
 
     print("\n==============QUERIES==============\n")
 

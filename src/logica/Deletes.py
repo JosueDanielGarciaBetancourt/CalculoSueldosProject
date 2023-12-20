@@ -10,7 +10,7 @@ class DeleteSignal(QObject):
     trabajadorDeleted = pyqtSignal()
 
 
-class Delete:
+class Deletes:
     signal = DeleteSignal()
 
     @staticmethod
@@ -30,23 +30,6 @@ class Delete:
                 session.rollback()  # Revertir cambios en caso de error
 
     @staticmethod
-    def deleteTrabajador(idTrabajador):
-        with Session() as session:
-            try:
-                trabajador = session.query(tblTrabajador).get(idTrabajador)
-                if trabajador:
-                    print(f"Se borrará el trabajador: {trabajador.trabNombreApellidos}")
-                    session.delete(trabajador)
-                    session.commit()
-                    Delete.signal.trabajadorDeleted.emit()
-                    print("Trabajador borrado exitosamente.")
-                else:
-                    print(f"No se encontró el trabajador con ID: {idTrabajador}")
-            except IntegrityError as e:
-                print(f"Error al borrar el trabajador: {e}")
-                session.rollback()  # Revertir cambios en caso de error
-
-    @staticmethod
     def deleteBonificacion(idBonificacion):
         with Session() as session:
             try:
@@ -61,3 +44,22 @@ class Delete:
             except IntegrityError as e:
                 print(f"Error al borrar la bonificación: {e}")
                 session.rollback()  # Revertir cambios en caso de error
+
+    @staticmethod
+    def deleteTrabajador(idTrabajador):
+        with Session() as session:
+            try:
+                trabajador = session.query(tblTrabajador).get(idTrabajador)
+                if trabajador:
+                    print(f"Se borrará el trabajador: {trabajador.trabNombreApellidos}")
+                    session.delete(trabajador)
+                    session.commit()
+                    Deletes.signal.trabajadorDeleted.emit()
+                    print("Trabajador borrado exitosamente.")
+                else:
+                    print(f"No se encontró el trabajador con ID: {idTrabajador}")
+            except IntegrityError as e:
+                print(f"Error al borrar el trabajador: {e}")
+                session.rollback()  # Revertir cambios en caso de error
+
+

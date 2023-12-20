@@ -3,9 +3,9 @@ from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate
 from vista.Window_Utils import MensajesWindow
 from vista.Window_Utils import center, returnDirectorioGUI
-from logica.Inserts import Insert, InsertSignal
-from logica.Deletes import Delete
-from logica.Updates import Update
+from logica.Inserts import Inserts, InsertSignal
+from logica.Deletes import Deletes
+from logica.Updates import Updates
 from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
 from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox, QHeaderView
@@ -149,7 +149,7 @@ class FormRegistrarNuevoTrabajador:
                     mensaje = f"Los campos: {', '.join(campos_vacios)} están vacíos"
                 MensajesWindow.mostrarMensajeRegistroError(mensaje)
             else:
-                Insert.insertTrabajador(DNI, ApellidosNombres, SueldoBase, Cargo)
+                Inserts.insertTrabajador(DNI, ApellidosNombres, SueldoBase, Cargo)
         except Exception as e:
             MensajesWindow.mostrarError("Error inesperado",
                                         f"Surgió un error al registrar trabajador: {e}")
@@ -194,7 +194,7 @@ class FormBuscarExistenteTrabajador:
             busquedaDNI_Nombre = self.BuscarExistenteTrabajador.lineEditDNIBuscar.text()
 
             if busquedaDNI_Nombre.strip() == "":
-                self.mostrarGUITableAllTrabajadores()
+                self.actualizarGUITableAllTrabajadores()
                 MensajesWindow.mostrarMensajeBusquedaError("Por favor ingrese el DNI/Nombre del trabajador a buscar")
             elif busquedaDNI_Nombre.isdigit():
                 if len(busquedaDNI_Nombre) > 8:
@@ -247,7 +247,7 @@ class FormBuscarExistenteTrabajador:
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 3, sueldo_item)
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setItem(row, 4, fecha_creacion_item)
 
-    def mostrarGUITableAllTrabajadores(self):
+    def actualizarGUITableAllTrabajadores(self):
         todos_los_trabajadores = Queries.get_all_trabajadores()
         # Limpiar la tabla antes de llenarla para evitar duplicados
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setRowCount(0)
@@ -285,7 +285,7 @@ class FormBuscarExistenteTrabajador:
                     # Eliminar fila seleccionada de la tabla
                     self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.removeRow(selectedRow)
                     # Eliminar trabajador seleccionado de la BD
-                    Delete.deleteTrabajador(selectedDNI)
+                    Deletes.deleteTrabajador(selectedDNI)
                     MensajesWindow.mostrarMensajeEliminarExito(f"Se eliminó el trabajador con DNI: {selectedDNI}")
                 except Exception as e:
                     mensaje = f"Error inesperado al eliminar trabajador: {e}"
@@ -331,9 +331,9 @@ class FormBuscarExistenteTrabajador:
         for col in range(num_columnas):
             self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setColumnWidth(col, ancho_columna)
 
-        self.mostrarGUITableAllTrabajadores()
-        Insert.signal.trabajadorInserted.connect(self.mostrarGUITableAllTrabajadores)
-        Delete.signal.trabajadorDeleted.connect(self.mostrarGUITableAllTrabajadores)
+        self.actualizarGUITableAllTrabajadores()
+        Inserts.signal.trabajadorInserted.connect(self.actualizarGUITableAllTrabajadores)
+        Deletes.signal.trabajadorDeleted.connect(self.actualizarGUITableAllTrabajadores)
         self.BuscarExistenteTrabajador.tableTrabajadoresRegistrados.setEditTriggers(
             QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 
