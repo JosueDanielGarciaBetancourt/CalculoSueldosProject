@@ -59,58 +59,6 @@ color: white;
      <string>BONIFICACIONES </string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_AgregarBonificacion">
-    <property name="geometry">
-     <rect>
-      <x>760</x>
-      <y>230</y>
-      <width>181</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 700 15pt 'Calibri';
-color: white;
-border: 1px solid white;
-border-radius: 15px;
-background-color: rgb(52, 50, 125);</string>
-    </property>
-    <property name="text">
-     <string>Agregar bonificación</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_EliminarBonificacion">
-    <property name="geometry">
-     <rect>
-      <x>760</x>
-      <y>360</y>
-      <width>191</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 700 15pt 'Calibri';
-color: white;
-border: 1px solid white;
-border-radius: 15px;
-background-color: rgb(52, 50, 125);</string>
-    </property>
-    <property name="text">
-     <string>Eliminar bonificación</string>
-    </property>
-   </widget>
    <widget class="QTableWidget" name="tablaBonificaciones">
     <property name="enabled">
      <bool>true</bool>
@@ -166,6 +114,9 @@ color: black;</string>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
     </property>
     <property name="showGrid">
      <bool>true</bool>
@@ -483,6 +434,9 @@ color: black;</string>
     </item>
    </widget>
    <widget class="QPushButton" name="pushButtonRegresar">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1010</x>
@@ -493,6 +447,9 @@ color: black;</string>
     </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
     </property>
     <property name="text">
      <string/>
@@ -509,32 +466,6 @@ color: black;</string>
     </property>
     <property name="flat">
      <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_ModificarBonificacion">
-    <property name="geometry">
-     <rect>
-      <x>760</x>
-      <y>290</y>
-      <width>191</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 700 15pt 'Calibri';
-color: white;
-border: 1px solid white;
-border-radius: 15px;
-background-color: rgb(52, 50, 125);</string>
-    </property>
-    <property name="text">
-     <string>Modificar bonificación</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonNoSelection">
@@ -738,16 +669,134 @@ directamente en la tabla</string>
 en la nueva fila</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>190</y>
+      <width>231</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: transparent;</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="pushButton_EliminarBonificacion">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 700 15pt 'Calibri';
+color: white;
+border: 1px solid white;
+border-radius: 15px;
+background-color: rgb(52, 50, 125);</string>
+     </property>
+     <property name="text">
+      <string>Eliminar bonificación</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_ModificarBonificacion">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 700 15pt 'Calibri';
+color: white;
+border: 1px solid white;
+border-radius: 15px;
+background-color: rgb(52, 50, 125);</string>
+     </property>
+     <property name="text">
+      <string>Modificar bonificación</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_AgregarBonificacion">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>181</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 700 15pt 'Calibri';
+color: white;
+border: 1px solid white;
+border-radius: 15px;
+background-color: rgb(52, 50, 125);</string>
+     </property>
+     <property name="text">
+      <string>Agregar bonificación</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_Cancelar">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>230</y>
+       <width>101</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 700 15pt 'Calibri';
+color: white;
+border: 1px solid white;
+border-radius: 15px;
+background-color: rgb(198, 26, 2);</string>
+     </property>
+     <property name="text">
+      <string>Cancelar</string>
+     </property>
+    </widget>
+   </widget>
    <zorder>label_InstruccionModificar</zorder>
    <zorder>pushButtonNoSelection</zorder>
    <zorder>label_10</zorder>
-   <zorder>pushButton_AgregarBonificacion</zorder>
-   <zorder>pushButton_EliminarBonificacion</zorder>
    <zorder>tablaBonificaciones</zorder>
    <zorder>pushButtonRegresar</zorder>
-   <zorder>pushButton_ModificarBonificacion</zorder>
    <zorder>groupBox_3</zorder>
    <zorder>label_InstruccionAgregar</zorder>
+   <zorder>groupBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
