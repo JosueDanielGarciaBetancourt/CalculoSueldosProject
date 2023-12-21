@@ -1,4 +1,3 @@
-# TODO: Corregir bugs de agregar, modificar y  eliminar en su conjunto e individualmente
 # TODO: Agregar nuevaUnidadBonificacion a tblBonificacion
 # TODO: Implementar el funcionamiento de ventana FormInspeccionarTrabajador
 # TODO: Implementar ordenamiento de tablas por ID y por Fechas
