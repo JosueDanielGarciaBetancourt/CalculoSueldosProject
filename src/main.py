@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+# TODO: Agregar nuevaUnidadBonificacion a tblBonificacion
+>>>>>>> abca2aaf4d3b1b8c3304a2bad57649028e7a51fa
 # TODO: Implementar el funcionamiento de ventana FormInspeccionarTrabajador
 
 # TODO: Implementar registro de detalle mensual en las tablas respectivas
