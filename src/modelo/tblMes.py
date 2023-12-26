@@ -2,6 +2,7 @@ from sqlalchemy import Column, String
 from .Declarative_Base import Base
 from sqlalchemy.orm import relationship
 
+
 class tblMes(Base):
     __tablename__ = 'tblMes'
     IDMes = Column(String(8), primary_key=True)

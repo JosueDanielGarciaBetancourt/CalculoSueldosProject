@@ -17,14 +17,6 @@ class FormMenuPrincipal:
         else:
             print(f"Error: Archivo UI no encontrado en {ruta_absoluta}")
 
-    def center(self):
-        qr = self.MenuPrincipal.frameGeometry()
-        cp = QGuiApplication.primaryScreen().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.MenuPrincipal.move(qr.topLeft())
-
-
-
     def mostrar(self):
         self.MenuPrincipal.show()
 

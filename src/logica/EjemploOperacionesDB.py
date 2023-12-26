@@ -25,9 +25,9 @@ def EjemploOperacionesDB():
 
     print("\nBONIFICACIONES")
     # Insertar bonificaciones
-    Inserts.insertBonificacion("BONI01", "Factor por horas extras", 0.50)
-    Inserts.insertBonificacion("BONI02", "Movilidad", 1000.00)
-    Inserts.insertBonificacion("BONI03", "Factor de bonificación suplementaria", 0.03)
+    Inserts.insertBonificacion("BONI01", "Factor por horas extras", "-", 0.50)
+    Inserts.insertBonificacion("BONI02", "Movilidad", "S/.", 1000.00)
+    Inserts.insertBonificacion("BONI03", "Factor de bonificación suplementaria", "-", 0.03)
 
     print("\nTRABAJADORES")
     # Insertar trabajador
@@ -166,10 +166,13 @@ def EjemploOperacionesDB():
 
     trab02 = Queries.get_trabajador_by_id("12345678")
     detalleTrab02 = Queries.get_detalle_mensual_trabajador_by_id("12345678", "MES05")
+    factHorasExtra = Queries.get_bonificacion_by_id("BONI01")
     Movilidad = Queries.get_bonificacion_by_id("BONI02")
     factSuplementaria = Queries.get_bonificacion_by_id("BONI03")
+
     print("BONIFICACIONES: \n")
-    print("Movilidad: ", Movilidad.bonValor)
+    print("Factor de horas extra: ", )
+    print("Movilidad: ", factHorasExtra.bonValor)
     print("Factor de bonif. Suplementaria: ", factSuplementaria.bonValor)
     print("12345678: \n")
     print("ID del Trabajador: ", trab02.IDTrabajador)
@@ -189,8 +192,8 @@ def EjemploOperacionesDB():
 
     calcularSueldoTrab01 = CalculoSueldo(trab02.trabSueldoBase, detalleTrab02.detalleHorasExtras,
                                          detalleTrab02.detalleDiasFalta, detalleTrab02.detalleMinutosTardanzas,
-                                         Movilidad.bonValor, factSuplementaria.bonValor)
+                                         factHorasExtra.bonValor, Movilidad.bonValor, factSuplementaria.bonValor)
 
-    sueldoNetoTrab02 = calcularSueldoTrab01.CalcularSueldoNeto()
+    sueldoNetoTrab02 = calcularSueldoTrab01.calcularSueldoNeto()
 
     print(f"\nEl SUELDO NETO de 12345678 es: {sueldoNetoTrab02}")

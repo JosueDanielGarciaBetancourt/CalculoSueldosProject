@@ -8,8 +8,8 @@ class tblTrabajador(Base):
     __tablename__ = 'tblTrabajador'
     IDTrabajador = Column(String(8), primary_key=True)
     trabNombreApellidos = Column(String(50), nullable=False)
-    trabSueldoBase = Column(Float, nullable=False)
     trabCargo = Column(String(150), nullable=False)
+    trabSueldoBase = Column(Float, nullable=False)
     created_at = Column(DateTime(), default=datetime.now)  # YYYY-MM-DD hh-mm-ss
 
     # Relación con tblDetalleMensualTrabajador

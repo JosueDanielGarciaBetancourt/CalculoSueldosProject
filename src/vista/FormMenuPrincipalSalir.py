@@ -8,8 +8,8 @@ directorio_ui = returnDirectorioGUI()
 class FormMenuPrincipalSalir(QtWidgets.QMainWindow):
     def __init__(self, parent):
         super().__init__()
-        uic.loadUi(f"{directorio_ui}MenuPrincipalSalir.ui", self)
         self.parent = parent
+        uic.loadUi(f"{directorio_ui}MenuPrincipalSalir.ui", self) # Asignar la interfaz al objeto actual
         center(self)
         self.initGUI()
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)  # Mantener por encima de otras ventanas
@@ -35,4 +35,3 @@ class FormMenuPrincipalSalir(QtWidgets.QMainWindow):
     def initGUI(self):
         self.buttonBoxAceptarCancelar.accepted.connect(self.aceptarSalir)
         self.buttonBoxAceptarCancelar.rejected.connect(self.cancelarSalir)
-

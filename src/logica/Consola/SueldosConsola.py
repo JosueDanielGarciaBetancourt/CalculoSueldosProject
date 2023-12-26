@@ -127,7 +127,7 @@ if __name__ == "__main__":
                             # Cálculos de nuevo_trabajador
                             nuevo_trabajador.calcularBonificacion(nuevo_trabajador)
                             nuevo_trabajador.calcularDescuento(nuevo_trabajador)
-                            nuevo_trabajador.calcularSueldoNeto()
+                            nuevo_trabajador.calcularDetallesSueldo()
                         elif opc == 2:
                             limpiar_pantalla()
                             print("---DATOS DEL USUARIO---")

@@ -1,12 +1,10 @@
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtWidgets import QMessageBox
-import os
 
 
 def returnDirectorioGUI():
-    directorio_trabajo = os.getcwd()
-    directorioGUI = ("otros_recursos\\GUI\\")
+    directorioGUI = "otros_recursos\\GUI\\"
     return directorioGUI
 
 

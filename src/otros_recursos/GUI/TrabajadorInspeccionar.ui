@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>620</height>
+    <height>630</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1150</width>
-    <height>620</height>
+    <height>625</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1200</width>
-    <height>620</height>
+    <height>630</height>
    </size>
   </property>
   <property name="cursor">
@@ -391,6 +391,9 @@ color: white;
       <height>51</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -416,8 +419,8 @@ color: white;
      <rect>
       <x>480</x>
       <y>50</y>
-      <width>425</width>
-      <height>117</height>
+      <width>430</width>
+      <height>125</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -428,14 +431,14 @@ color: white;
     </property>
     <property name="minimumSize">
      <size>
-      <width>425</width>
-      <height>117</height>
+      <width>427</width>
+      <height>125</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>425</width>
-      <height>125</height>
+      <width>430</width>
+      <height>130</height>
      </size>
     </property>
     <property name="font">
@@ -809,7 +812,7 @@ color: rgb(211,190,10);
     <property name="minimumSize">
      <size>
       <width>1080</width>
-      <height>0</height>
+      <height>421</height>
      </size>
     </property>
     <property name="maximumSize">
@@ -879,13 +882,13 @@ color: rgb(211,190,10);
         <x>0</x>
         <y>0</y>
         <width>1080</width>
-        <height>410</height>
+        <height>420</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>1070</width>
-        <height>410</height>
+        <height>420</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -3201,19 +3204,19 @@ QTableWidget::item {
         <x>0</x>
         <y>0</y>
         <width>1080</width>
-        <height>410</height>
+        <height>405</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>1070</width>
-        <height>410</height>
+        <height>405</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>1080</width>
-        <height>410</height>
+        <height>415</height>
        </size>
       </property>
       <property name="focusPolicy">
@@ -4254,6 +4257,9 @@ color: rgb(211,190,10);</string>
       <bold>false</bold>
      </font>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
@@ -4276,10 +4282,13 @@ background: white;</string>
     <property name="geometry">
      <rect>
       <x>930</x>
-      <y>40</y>
+      <y>120</y>
       <width>131</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -4296,14 +4305,17 @@ background-color: rgb(41, 11, 11);</string>
 tardanzas</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonActualizarDatos">
+   <widget class="QPushButton" name="pushButtonRegistrarDatosMensuales">
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>40</y>
+      <x>930</x>
+      <y>50</y>
       <width>131</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -4316,17 +4328,21 @@ border-radius: 20px;
 background-color: rgb(41, 11, 11);</string>
     </property>
     <property name="text">
-     <string>Actualizar datos</string>
+     <string>Registrar datos 
+mensuales</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonGenerarBoleta">
+   <widget class="QPushButton" name="pushButtonPagarSueldo">
     <property name="geometry">
      <rect>
-      <x>950</x>
-      <y>110</y>
-      <width>131</width>
+      <x>1090</x>
+      <y>100</y>
+      <width>71</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -4339,7 +4355,7 @@ border-radius: 15px;
 background-color: rgb(0, 50, 125);</string>
     </property>
     <property name="text">
-     <string>Generar boleta</string>
+     <string>Pagar</string>
     </property>
    </widget>
    <zorder>groupBox</zorder>
@@ -4356,8 +4372,8 @@ background-color: rgb(0, 50, 125);</string>
    <zorder>label_10</zorder>
    <zorder>comboBox</zorder>
    <zorder>pushButtonJustificar</zorder>
-   <zorder>pushButtonActualizarDatos</zorder>
-   <zorder>pushButtonGenerarBoleta</zorder>
+   <zorder>pushButtonRegistrarDatosMensuales</zorder>
+   <zorder>pushButtonPagarSueldo</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -4373,9 +4389,9 @@ background-color: rgb(0, 50, 125);</string>
  <tabstops>
   <tabstop>pushButtonJustificar</tabstop>
   <tabstop>dateEditFechaActual</tabstop>
-  <tabstop>pushButtonGenerarBoleta</tabstop>
+  <tabstop>pushButtonPagarSueldo</tabstop>
   <tabstop>pushButtonRegresar</tabstop>
-  <tabstop>pushButtonActualizarDatos</tabstop>
+  <tabstop>pushButtonRegistrarDatosMensuales</tabstop>
   <tabstop>spinBoxYear</tabstop>
  </tabstops>
  <resources/>

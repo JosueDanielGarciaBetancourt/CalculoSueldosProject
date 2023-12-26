@@ -160,7 +160,7 @@ class FormBonificacionVerModificar:
         self.actualizarContadorNumeroFilas()
         self.flagAgregarBonificacion = not self.flagAgregarBonificacion
 
-        print(self.flagAgregarBonificacion)
+        print(f"\nAgregar bonificación: {self.flagAgregarBonificacion}\n")
 
         try:
             if self.flagAgregarBonificacion:
@@ -175,6 +175,7 @@ class FormBonificacionVerModificar:
                 self.BonificacionVerModificar.pushButton_ModificarBonificacion.setEnabled(False)
                 self.BonificacionVerModificar.pushButtonRegresar.setEnabled(False)
                 self.BonificacionVerModificar.pushButton_EliminarBonificacion.setEnabled(False)
+
                 self.BonificacionVerModificar.tablaBonificaciones.insertRow(self.num_filasGUITableBonificaciones)
                 self.actualizarContadorNumeroFilas()
                 ultimaBonificacion = Queries.get_last_bonification()
@@ -213,21 +214,22 @@ class FormBonificacionVerModificar:
 
                     # Validar el tipo de bonificación
                     if len(nuevoTipoBonificacion) > 40:
-                        raise ValueError("El tipo de bonificación debe contener menos de 40 caracteres")
+                        raise ValueError(f"\n{nuevoTipoBonificacion}, el tipo de bonificación "
+                                         f"debe contener menos de 40 caracteres")
 
                     # Validar el valor de bonificación
                     if not re.match(r'^[0-9.]+$', str(nuevoValorBonificacion)):
-                        raise ValueError("El valor de bonificación debe ser un número")
+                        raise ValueError(f"\n{nuevoValorBonificacion}, el valor de bonificación debe ser un número")
 
                     try:
                         nuevoValorBonificacion = float(nuevoValorBonificacion)
                     except ValueError:
-                        raise ValueError("No se puede convertir a número")
+                        raise ValueError(f"\n{nuevoValorBonificacion}, no se puede convertir a número")
 
                     if nuevoValorBonificacion <= 0:
-                        raise ValueError("No se permiten valores menores o iguales a 0")
+                        raise ValueError(f"\n{nuevoValorBonificacion}, no se permiten valores menores o iguales a 0")
 
-                    Inserts.insertBonificacion(nuevoIDBonificacion, nuevoTipoBonificacion,
+                    Inserts.insertBonificacion(nuevoIDBonificacion, nuevoTipoBonificacion, nuevaUnidadBonificacion,
                                                float(nuevoValorBonificacion))
 
                     for columna, dato in enumerate(listaValoresCamposUltimaFila):
@@ -270,6 +272,9 @@ class FormBonificacionVerModificar:
                     "border-radius: 15px;"
                     "background-color: rgb(255, 164, 151);")
                 print("CANCELAR deshabilitado ")
+
+            self.tableColumnValorBoniEditable = False
+
         except ValueError as ve:
             self.BonificacionVerModificar.pushButton_AgregarBonificacion.setStyleSheet(
                 "font: 700 15pt 'Calibri';"
@@ -303,112 +308,13 @@ class FormBonificacionVerModificar:
             print(mensaje)
             MensajesWindow.mostrarMensajeRegistroError(mensaje)
 
-
-    def cancelarOperacionesBonificacion(self):
-        try:
-            # CANCELAR "Agregar bonificacion"
-            if self.flagAgregarBonificacion:
-                self.actualizarContadorNumeroFilas()
-                self.BonificacionVerModificar.tablaBonificaciones.removeRow(self.num_filasGUITableBonificaciones - 1)
-                self.flagAgregarBonificacion = False
-                self.BonificacionVerModificar.pushButton_AgregarBonificacion.setStyleSheet(
-                    "font: 700 15pt 'Calibri';"
-                    "color: white;"
-                    "border: 1px solid white;"
-                    "border-radius: 15px;"
-                    "background-color: rgb(52, 50, 125);")
-                self.BonificacionVerModificar.pushButton_AgregarBonificacion.setText("Agregar bonificación")
-
-            self.BonificacionVerModificar.pushButton_AgregarBonificacion.setEnabled(True)
-
-            if self.tableColumnValorBoniEditable:
-                # CANCELAR "Modificar bonificacion"
-                self.tableColumnValorBoniEditable = True
-                self.restaurarValoresOriginalesColumn3()
-                # Deshabilitar edición de la columna 3 "Valor"
-                self.enable_disable_edit_tableBonificacionesColumn3()
-                self.BonificacionVerModificar.pushButton_ModificarBonificacion.setStyleSheet(
-                    "font: 700 15pt 'Calibri';"
-                    "color: white;"
-                    "border: 1px solid white;"
-                    "border-radius: 15px;"
-                    "background-color: rgb(52, 50, 125);")
-                self.BonificacionVerModificar.pushButton_ModificarBonificacion.setText("Modificar bonificación")
-
-            self.BonificacionVerModificar.pushButton_ModificarBonificacion.setEnabled(True)
-
-            self.BonificacionVerModificar.pushButton_EliminarBonificacion.setEnabled(True)
-            self.BonificacionVerModificar.pushButtonRegresar.setEnabled(True)
-            self.BonificacionVerModificar.pushButton_Cancelar.setEnabled(False)
-
-            if self.BonificacionVerModificar.pushButton_Cancelar.isEnabled():
-                self.BonificacionVerModificar.pushButton_Cancelar.setStyleSheet(
-                    "font: 700 15pt 'Calibri';"
-                    "color: white;"
-                    "border: 1px solid white;"
-                    "border-radius: 15px;"
-                    "background-color: rgb(198, 26, 2);")
-                print("CANCELAR habilitado ")
-            else:
-                self.BonificacionVerModificar.pushButton_Cancelar.setStyleSheet(
-                    "font: 700 15pt 'Calibri';"
-                    "color: white;"
-                    "border: 1px solid white;"
-                    "border-radius: 15px;"
-                    "background-color: rgb(255, 164, 151);")
-                print("CANCELAR deshabilitado ")
-            mensaje = "Operación cancelada"
-            print(mensaje)
-            MensajesWindow.mostrarMensajeRegistroError(mensaje)
-        except Exception as e:
-            mensaje = f"Error inesperado al cancelar operaciones de bonificación: {e}"
-            print(mensaje)
-            MensajesWindow.mostrarMensajeRegistroError(mensaje)
-
-    def enable_disable_edit_tableBonificacionesColumn3(self):
-        try:
-            self.tableColumnValorBoniEditable = not self.tableColumnValorBoniEditable
-            self.actualizarContadorNumeroFilas()
-            for fila in range(self.num_filasGUITableBonificaciones):
-                item = self.BonificacionVerModificar.tablaBonificaciones.item(fila, 3)
-                if self.tableColumnValorBoniEditable:
-                    item.setFlags(item.flags() | Qt.ItemFlag.ItemIsEditable)
-                else:
-                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-        except Exception as e:
-            mensaje = f"Ocurrió un error inesperado al intentar habilitar/deshabilitar la columna Valor, {e}"
-            print(mensaje)
-            MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
-
-    def restaurarValoresOriginalesLastRow(self, lastRow):
-        try:
-            listaCamposUltimaFila = self.obtener_campos_ultima_fila()
-            print(listaCamposUltimaFila)
-            for column in range(self.num_columnasGUITableBonificaciones):
-                original_value_item = QTableWidgetItem(str(listaCamposUltimaFila[column]))
-                # | → Es como "mezclar" o combinar las configuraciones individuales en una sola que
-                # incluye tanto la alineación horizontal como la vertical.
-                original_value_item.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
-                self.BonificacionVerModificar.tablaBonificaciones.setItem(lastRow, column, original_value_item)
-        except Exception as e:
-            print(f"Ocurrió un error inesperado al regresar a los valores anteriores {e}")
-
-    def restaurarValoresOriginalesColumn3(self):
-        try:
-            print(f"Valores originales restaurados: {self.original_values}")
-            for fila in range(self.num_filasGUITableBonificaciones):
-                original_value_item = QTableWidgetItem(str(self.original_values[fila]))
-                # | → Es como "mezclar" o combinar las configuraciones individuales en una sola que
-                # incluye tanto la alineación horizontal como la vertical.
-                original_value_item.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
-                self.BonificacionVerModificar.tablaBonificaciones.setItem(fila, 3, original_value_item)
-        except Exception as e:
-            print(f"Ocurrió un error inesperado al regresar a los valores anteriores {e}")
+        self.adjustTableSize()
 
     def modificarGUITableBonificacionesColumn3(self):
         # Habilitar o deshabilitar la edición de la columna 3 "Valor" de la tabla bonificaciones de la GUI
         self.enable_disable_edit_tableBonificacionesColumn3()
-        print(self.tableColumnValorBoniEditable)
+        print(f"\nModificar bonificación: {self.tableColumnValorBoniEditable}\n")
+
         try:
             self.BonificacionVerModificar.label_InstruccionAgregar.setVisible(False)
             if self.tableColumnValorBoniEditable:
@@ -485,6 +391,9 @@ class FormBonificacionVerModificar:
                 mensaje = f"Modificación realizada correctamente"
                 print(mensaje)
                 MensajesWindow.mostrarMensajeRegistroExito(mensaje)
+
+                self.flagAgregarBonificacion = False
+
             except ValueError as e:
                 self.tableColumnValorBoniEditable = False
                 self.enable_disable_edit_tableBonificacionesColumn3()
@@ -516,6 +425,113 @@ class FormBonificacionVerModificar:
                 mensaje = f"Error inesperado al procesar la modificación: {e}"
                 print(mensaje)
                 MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
+
+        self.adjustTableSize()
+
+    def cancelarOperacionesBonificacion(self):
+        try:
+            self.BonificacionVerModificar.label_InstruccionAgregar.setVisible(False)
+            self.BonificacionVerModificar.label_InstruccionModificar.setVisible(False)
+            # CANCELAR "Agregar bonificacion"
+            if self.flagAgregarBonificacion:
+                self.actualizarContadorNumeroFilas()
+                self.BonificacionVerModificar.tablaBonificaciones.removeRow(self.num_filasGUITableBonificaciones - 1)
+                self.flagAgregarBonificacion = False
+                self.BonificacionVerModificar.pushButton_AgregarBonificacion.setStyleSheet(
+                    "font: 700 15pt 'Calibri';"
+                    "color: white;"
+                    "border: 1px solid white;"
+                    "border-radius: 15px;"
+                    "background-color: rgb(52, 50, 125);")
+                self.BonificacionVerModificar.pushButton_AgregarBonificacion.setText("Agregar bonificación")
+
+            self.BonificacionVerModificar.pushButton_AgregarBonificacion.setEnabled(True)
+
+            if self.tableColumnValorBoniEditable:
+                # CANCELAR "Modificar bonificacion"
+                self.tableColumnValorBoniEditable = True
+                self.restaurarValoresOriginalesColumn3()
+                # Deshabilitar edición de la columna 3 "Valor"
+                self.enable_disable_edit_tableBonificacionesColumn3()
+                self.BonificacionVerModificar.pushButton_ModificarBonificacion.setStyleSheet(
+                    "font: 700 15pt 'Calibri';"
+                    "color: white;"
+                    "border: 1px solid white;"
+                    "border-radius: 15px;"
+                    "background-color: rgb(52, 50, 125);")
+                self.BonificacionVerModificar.pushButton_ModificarBonificacion.setText("Modificar bonificación")
+
+            self.BonificacionVerModificar.pushButton_ModificarBonificacion.setEnabled(True)
+
+            self.BonificacionVerModificar.pushButton_EliminarBonificacion.setEnabled(True)
+            self.BonificacionVerModificar.pushButtonRegresar.setEnabled(True)
+            self.BonificacionVerModificar.pushButton_Cancelar.setEnabled(False)
+
+            if self.BonificacionVerModificar.pushButton_Cancelar.isEnabled():
+                self.BonificacionVerModificar.pushButton_Cancelar.setStyleSheet(
+                    "font: 700 15pt 'Calibri';"
+                    "color: white;"
+                    "border: 1px solid white;"
+                    "border-radius: 15px;"
+                    "background-color: rgb(198, 26, 2);")
+                print("CANCELAR habilitado ")
+            else:
+                self.BonificacionVerModificar.pushButton_Cancelar.setStyleSheet(
+                    "font: 700 15pt 'Calibri';"
+                    "color: white;"
+                    "border: 1px solid white;"
+                    "border-radius: 15px;"
+                    "background-color: rgb(255, 164, 151);")
+                print("CANCELAR deshabilitado ")
+            mensaje = "Operación cancelada"
+            print(mensaje)
+            MensajesWindow.mostrarMensajeRegistroError(mensaje)
+        except Exception as e:
+            mensaje = f"Error inesperado al cancelar operaciones de bonificación: {e}"
+            print(mensaje)
+            MensajesWindow.mostrarMensajeRegistroError(mensaje)
+
+        self.adjustTableSize()
+
+    def enable_disable_edit_tableBonificacionesColumn3(self):
+        try:
+            self.tableColumnValorBoniEditable = not self.tableColumnValorBoniEditable
+            self.actualizarContadorNumeroFilas()
+            for fila in range(self.num_filasGUITableBonificaciones):
+                item = self.BonificacionVerModificar.tablaBonificaciones.item(fila, 3)
+                if self.tableColumnValorBoniEditable:
+                    item.setFlags(item.flags() | Qt.ItemFlag.ItemIsEditable)
+                else:
+                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+        except Exception as e:
+            mensaje = f"Ocurrió un error inesperado al intentar habilitar/deshabilitar la columna Valor, {e}"
+            print(mensaje)
+            MensajesWindow.mostrarMensajeErrorInesperado(mensaje)
+
+    def restaurarValoresOriginalesLastRow(self, lastRow):
+        try:
+            listaCamposUltimaFila = self.obtener_campos_ultima_fila()
+            print(listaCamposUltimaFila)
+            for column in range(self.num_columnasGUITableBonificaciones):
+                original_value_item = QTableWidgetItem(str(listaCamposUltimaFila[column]))
+                # | → Es como "mezclar" o combinar las configuraciones individuales en una sola que
+                # incluye tanto la alineación horizontal como la vertical.
+                original_value_item.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
+                self.BonificacionVerModificar.tablaBonificaciones.setItem(lastRow, column, original_value_item)
+        except Exception as e:
+            print(f"Ocurrió un error inesperado al regresar a los valores anteriores {e}")
+
+    def restaurarValoresOriginalesColumn3(self):
+        try:
+            print(f"Valores originales restaurados: {self.original_values}")
+            for fila in range(self.num_filasGUITableBonificaciones):
+                original_value_item = QTableWidgetItem(str(self.original_values[fila]))
+                # | → Es como "mezclar" o combinar las configuraciones individuales en una sola que
+                # incluye tanto la alineación horizontal como la vertical.
+                original_value_item.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
+                self.BonificacionVerModificar.tablaBonificaciones.setItem(fila, 3, original_value_item)
+        except Exception as e:
+            print(f"Ocurrió un error inesperado al regresar a los valores anteriores {e}")
 
     def guardarValoresOriginalesColumn3(self):
         try:
@@ -561,8 +577,24 @@ class FormBonificacionVerModificar:
             print(mensaje)
             MensajesWindow.mostrarMensajeEliminarError(mensaje)
 
+        self.adjustTableSize()
+
     def deseleccionarTabla(self):
         self.BonificacionVerModificar.tablaBonificaciones.clearSelection()
+
+    def adjustTableSize(self):
+        ancho_maximo = self.BonificacionVerModificar.tablaBonificaciones.width()
+        num_columnas = self.BonificacionVerModificar.tablaBonificaciones.columnCount()
+
+        ancho_columna = int(ancho_maximo / num_columnas)
+
+        # Establecer el ancho de cada columna
+        for col in range(num_columnas):
+            self.BonificacionVerModificar.tablaBonificaciones.setColumnWidth(col, ancho_columna)
+
+        self.BonificacionVerModificar.tablaBonificaciones.resizeColumnsToContents()
+        # Permitir que la última columna se expanda para llenar el espacio restante
+        self.BonificacionVerModificar.tablaBonificaciones.horizontalHeader().setStretchLastSection(True)
 
     def initGUI(self):
         self.BonificacionVerModificar.dateEditFechaActual.setDate(QDate.currentDate())
@@ -571,7 +603,7 @@ class FormBonificacionVerModificar:
         self.BonificacionVerModificar.label_InstruccionAgregar.setVisible(False)
         self.BonificacionVerModificar.label_InstruccionModificar.setVisible(False)
 
-        # botones
+        # Botones
         self.BonificacionVerModificar.pushButton_AgregarBonificacion.clicked.connect(self.agregarBonificacion)
         self.BonificacionVerModificar.pushButton_ModificarBonificacion.clicked.connect(
             self.modificarGUITableBonificacionesColumn3)
@@ -589,8 +621,7 @@ class FormBonificacionVerModificar:
 
         self.BonificacionVerModificar.pushButton_Cancelar.clicked.connect(self.cancelarOperacionesBonificacion)
 
-        # tabla
-        self.BonificacionVerModificar.tablaBonificaciones.resizeColumnsToContents()
-        self.BonificacionVerModificar.tablaBonificaciones.resizeRowsToContents()
+        # Tabla
+        self.adjustTableSize()
 
         # En Qt Designer ya se realizó la deshabilitación de edición de todas las celdas

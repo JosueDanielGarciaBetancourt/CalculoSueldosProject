@@ -38,7 +38,7 @@ class Inserts:
                 session.rollback()  # Revertir cambios en caso de error
 
     @staticmethod
-    def insertBonificacion(idBonificacion, boniTipo, boniValor):
+    def insertBonificacion(idBonificacion, boniTipo, boniUnidad, boniValor):
         with Session() as session:
             try:
                 existing_bonificacion = session.query(tblBonificacion).get(idBonificacion)
@@ -47,13 +47,13 @@ class Inserts:
                     print(mensaje)
                     MensajesWindow.mostrarMensajeRegistroError(mensaje)
                 else:
-                    bonificacion = tblBonificacion(IDBonificacion=idBonificacion, bonTipo=boniTipo, bonValor=boniValor)
+                    bonificacion = tblBonificacion(IDBonificacion=idBonificacion, bonTipo=boniTipo, bonUnidad=boniUnidad, bonValor=boniValor)
                     session.add(bonificacion)
                     session.commit()
                     mensaje = f"Se registró correctamente la bonificación\n ID: {idBonificacion}\n" \
-                              f" Tipo:  {boniTipo}\n Valor: {boniValor}\n "
+                              f" Tipo:  {boniTipo}\n Unidad: {boniUnidad}\n Valor: {boniValor}\n "
                     print(mensaje)
-                    MensajesWindow.mostrarMensajeRegistroExito(mensaje)
+                    #MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error

@@ -141,6 +141,9 @@ color: white;</string>
       <height>51</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
@@ -162,6 +165,9 @@ background-color: rgb(0, 0, 0);</string>
       <width>121</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -201,7 +207,7 @@ background-color: rgb(0, 0, 0);</string>
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>2</hour>
+      <hour>7</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>

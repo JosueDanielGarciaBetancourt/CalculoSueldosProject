@@ -7,7 +7,7 @@ class tblBonificacion(Base):
     __tablename__ = 'tblBonificacion'
     IDBonificacion = Column(String(8), primary_key=True)
     bonTipo = Column(String(40), nullable=False)
-    #bonUnidad = Column(String(10), nullable)
+    bonUnidad = Column(String(10), nullable=False)
     bonValor = Column(Float, nullable=False)
 
     # Relación con tblDetalleBonificación

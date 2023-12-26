@@ -1,9 +1,20 @@
-# TODO: Implementar correctamente botón CANCELAR
-# TODO: Agregar nuevaUnidadBonificacion a tblBonificacion
 # TODO: Implementar el funcionamiento de ventana FormInspeccionarTrabajador
-# TODO: Implementar ordenamiento de tablas por ID y por Fechas
+
+# TODO: Implementar registro de detalle mensual en las tablas respectivas
+# TODO: Implementar pago de sueldo en la tabla historial de pagos
+# TODO: Generar PDF para el comprobante de pago
+
+
 # TODO: Implementar justificaciones
+
+
+# TODO: Implementar ordenamiento de tablas por ID y por Fechas
+
+
 # TODO: Después de cada CRUD se debe actualizar la tabla de trabajadores GUI
+
+
+# TODO: Testing
 
 from logica.EjemploOperacionesDB import EjemploOperacionesDB
 from modelo.Declarative_Base import reiniciarDB

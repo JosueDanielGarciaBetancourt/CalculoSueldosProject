@@ -10,6 +10,7 @@ from logica.Queries import Queries
 from logica.CalculoSueldo import CalculoSueldo
 from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox, QHeaderView
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
 directorio_ui = returnDirectorioGUI()
 
@@ -339,22 +340,110 @@ class FormBuscarExistenteTrabajador:
 
 
 class FormInspeccionarTrabajador:
-    def __init__(self, parent):
+    def __init__(self, parent, trabajador):
         self.parent = parent
-        self.trabajador = None  # Objeto trabajador a inspeccionar
+
+        self.fecha_actual = datetime.now()
+        self.mes_actual = "{:02d}".format(
+            self.fecha_actual.month)  # Se obtiene el número de mes actual con un 0 al inicio de ser necesario
+        self.IDMes = "MES" + self.mes_actual
+
+        self.boniHorasExtra = Queries.get_bonificacion_by_id("BONI01")
+        self.boniMovilidad = Queries.get_bonificacion_by_id("BONI02")
+        self.boniSuplementaria = Queries.get_bonificacion_by_id("BONI03")
+
+        if trabajador:
+            self.trabajador = trabajador
+            self.IDTrabajador = self.trabajador.IDTrabajador
+            self.nombresApellidos = self.trabajador.trabNombreApellidos
+            self.cargo = self.trabajador.trabCargo
+            self.sueldoBase = self.trabajador.trabSueldoBase
+            self.created_at = self.trabajador.created_at
+
+            self.detalleMensual = Queries.get_detalle_mensual_trabajador_by_id(self.trabajador.IDTrabajador,
+                                                                               self.IDMes)
+            if self.detalleMensual is None:
+                self.horasExtras = 0
+                self.minutosTardanzas = 0
+                self.minutosJustificados = 0
+                self.diasFalta = 0
+                self.diasJustificados = 0
+                self.sueldoNeto = 0
+            else:
+                self.horasExtras = self.detalleMensual.detalleHorasExtras
+                self.minutosTardanzas = self.detalleMensual.detalleMinutosTardanzas
+                self.minutosJustificados = self.detalleMensual.detalleMinutosJustificados
+                self.diasFalta = self.detalleMensual.detalleDiasFalta
+                self.diasJustificados = self.detalleMensual.detalleDiasJustificados
+                self.sueldoNeto = self.detalleMensual.detalleSueldoNeto
+        else:
+            print("No hay trabajador para inspeccionar")
+
         self.InspeccionarTrabajador = uic.loadUi(f"{directorio_ui}\\TrabajadorInspeccionar.ui")
         center(self.InspeccionarTrabajador)
         self.initGUI()
 
-    def mostrar(self, trabajador):
-        self.trabajador = trabajador
-        # Textos
-        self.InspeccionarTrabajador.labelDNI.setText(self.trabajador.IDTrabajador)
-        self.InspeccionarTrabajador.labelApeNomb.setText(self.trabajador.trabNombreApellidos)
-        self.InspeccionarTrabajador.labelCargo.setText(self.trabajador.trabCargo)
-        self.InspeccionarTrabajador.labelFechaCreacion.setText(str(self.trabajador.created_at))
-        self.InspeccionarTrabajador.labelSueldoBase.setText(str(self.trabajador.trabSueldoBase))
+    def mostrar(self):
+        # Inicializar etiquetas con la información del trabajador
+        self.InspeccionarTrabajador.labelDNI.setText(self.IDTrabajador)
+        self.InspeccionarTrabajador.labelApeNomb.setText(self.nombresApellidos)
+        self.InspeccionarTrabajador.labelCargo.setText(self.cargo)
+        self.InspeccionarTrabajador.labelFechaCreacion.setText(str(self.created_at))
+        self.InspeccionarTrabajador.labelSueldoBase.setText(str(self.sueldoBase))
         self.InspeccionarTrabajador.show()
+
+    def registrarDetalleMensual(self):
+        # En este caso se registrarán manualmante los detalles mensuales del trabajador
+        # debido a que no se cuenta con otro módulo de donde se pueda obtener los días de falta,
+        # minutos de tardanza y horas extra de manera automática
+
+        self.parent.showRegistroDetalleMensual()
+        if self.detalleMensual is None:
+            self.horasExtras = 0
+            self.minutosTardanzas = 0
+            self.minutosJustificados = 0
+            self.diasFalta = 0
+            self.diasJustificados = 0
+            self.sueldoNeto = 0
+        else:
+            self.horasExtras = self.detalleMensual.detalleHorasExtras
+            self.minutosTardanzas = self.detalleMensual.detalleMinutosTardanzas
+            self.minutosJustificados = self.detalleMensual.detalleMinutosJustificados
+            self.diasFalta = self.detalleMensual.detalleDiasFalta
+            self.diasJustificados = self.detalleMensual.detalleDiasJustificados
+            self.sueldoNeto = self.detalleMensual.detalleSueldoNeto
+
+        # Almacenar en la BD
+        #Inserts.InsertDetalleMensualTrabajador(self.IDTrabajador, self.IDMes, self.horasExtras, self.minutosTardanzas,
+        #                                       self.minutosJustificados, self.diasFalta, self.diasJustificados,
+        #                                       self.sueldoNeto)
+
+    def calcularDetallesSueldo(self):
+        try:
+            if self.detalleMensual:
+                print("Calculando sueldo")
+                t = self.trabajador
+                dm = self.detalleMensual
+                bhe = self.boniHorasExtra
+                bm = self.boniMovilidad
+                bs = self.boniSuplementaria
+
+                calcularSueldoTrab = CalculoSueldo(
+                    t.trabSueldoBase, dm.detalleHorasExtras,
+                    dm.detalleDiasFalta, dm.detalleMinutosTardanzas, bhe.bonValor,
+                    bm.bonValor, bs.bonValor)
+
+                bonificaciones = calcularSueldoTrab.calcularBonificaciones()
+                descuentos = calcularSueldoTrab.calcularDescuentos()
+                self.sueldoNeto = calcularSueldoTrab.calcularDetallesSueldo()
+                print(f"\nEl sueldo base es: {t.trabSueldoBase}")
+                print(f"El monto de bonificaciones es: {bonificaciones}")
+                print(f"El monto de descuentos es: {descuentos}")
+                print(f"El sueldo NETO es: {self.sueldoNeto}")
+            else:
+                print("\nAún no se registraron datos para el mes actual")
+        except Exception as e:
+            print(f"Error al calcular el sueldo: {e}")
 
     def ocultar(self):
         self.InspeccionarTrabajador.close()
@@ -368,8 +457,7 @@ class FormInspeccionarTrabajador:
 
         # Botones
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
-
-        self.InspeccionarTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
+        self.InspeccionarTrabajador.pushButtonRegistrarDatosMensuales.clicked.connect(self.registrarDetalleMensual)
 
         # Tablas
         ancho_maximo = 1080
@@ -386,4 +474,4 @@ class FormInspeccionarTrabajador:
             self.InspeccionarTrabajador.tablaHistorialPagos.setColumnWidth(column, ancho_columna_TablaHistorialPagos)
 
         self.InspeccionarTrabajador.tablaDetallada.resizeColumnsToContents()
-
+        self.InspeccionarTrabajador.tablaBonificaciones.resizeColumnToContents(1)
