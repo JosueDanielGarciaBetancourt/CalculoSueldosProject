@@ -4,7 +4,6 @@ from vista.FormMenuTrabajador import FormMenuTrabajador, FormRegistrarNuevoTraba
     FormInspeccionarTrabajador
 from vista.FormMenuBonificacion import FormMenuBonificacion, FormBonificacionVerModificar
 from vista.FormMenuDetallesSW import FormMenuDetallesSW
-from vista.FormRegistroDetalleMensual import FormRegistroDetalleMensual
 from vista.FormAcercaDeNosotros import FormAcercaDeNosotros
 from vista.FormAcercaDeGestorDeSueldosV1 import FormAcercaDeGestorDeSueldosV1
 
@@ -17,11 +16,10 @@ class GestorSueldos:
         self.MenuTrabajador = FormMenuTrabajador(self)
         self.RegistrarNuevoTrabajador = FormRegistrarNuevoTrabajador(self)
         self.BuscarExistenteTrabajador = FormBuscarExistenteTrabajador(self)
-        self.InspeccionarTrabajador = FormInspeccionarTrabajador(self, None)
+        self.InspeccionarTrabajador = FormInspeccionarTrabajador(self)
         self.MenuBonificacion = FormMenuBonificacion(self)
         self.BonificacionVerModificar = FormBonificacionVerModificar(self)
         self.MenuDetallesSW = FormMenuDetallesSW(self)
-        self.RegistroDetalleMensual = FormRegistroDetalleMensual(self)
         self.MenuPrincipalSalir = FormMenuPrincipalSalir(self)
         self.AcercaDeNosotros = FormAcercaDeNosotros(self)
         self.AcercaDeGestorDeSueldosV1 = FormAcercaDeGestorDeSueldosV1(self)
@@ -144,11 +142,8 @@ class GestorSueldos:
         if self.BuscarExistenteTrabajador is not None:
             self.BuscarExistenteTrabajador.ocultar()
 
-        if self.InspeccionarTrabajador is None:
-            self.InspeccionarTrabajador = FormInspeccionarTrabajador(self, trabajador)
-        else:
-            self.InspeccionarTrabajador = FormInspeccionarTrabajador(self, trabajador)
-            self.InspeccionarTrabajador.mostrar()
+        self.InspeccionarTrabajador.actualizarTrabajador(trabajador)
+        self.InspeccionarTrabajador.mostrar()
 
     def showMenuBonificacion(self):
         if self.MenuPrincipal is not None:
@@ -204,12 +199,6 @@ class GestorSueldos:
             self.MenuDetallesSW = FormMenuDetallesSW(self)
         else:
             self.MenuDetallesSW.mostrar()
-
-    def showRegistroDetalleMensual(self):
-        if self.RegistroDetalleMensual is None:
-            self.RegistroDetalleMensual = FormRegistroDetalleMensual(self)
-        else:
-            self.RegistroDetalleMensual.mostrar()
 
     def showMenuPrincipalSalir(self):
         if self.MenuPrincipalSalir is None:

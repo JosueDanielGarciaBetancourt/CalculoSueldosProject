@@ -60,7 +60,7 @@ def EjemploOperacionesDB():
     print("\n==============DELETES==============")
     print("\nMES")
     # Eliminando un mes
-    Deletes.deleteMes("MES12")
+    # Deletes.deleteMes("MES12")
 
     print("\nTRABAJADOR")
     # Eliminando un trabajador (esto borrará registros en boletaPago)

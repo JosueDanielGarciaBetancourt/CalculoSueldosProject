@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, String, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, ForeignKey, DateTime
 from .Declarative_Base import Base  # si no funciona es pq falta un punto delante de declarative xd
 from datetime import datetime
 from sqlalchemy.orm import relationship
@@ -15,6 +15,7 @@ class tblDetalleMensualTrabajador(Base):
     detalleDiasFalta = Column(Integer, nullable=False)
     detalleDiasJustificados = Column(Integer, nullable=False)
     detalleSueldoNeto = Column(Float, nullable=False)
+    detalleFecha = Column(DateTime(), default=datetime.now)  # YYYY-MM-DD hh-mm-ss
 
     # Relación inversa con tblTrabajador
     trabajador = relationship('tblTrabajador', back_populates='detalles_mensuales')

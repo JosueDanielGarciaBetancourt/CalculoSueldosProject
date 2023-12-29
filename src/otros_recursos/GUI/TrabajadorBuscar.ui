@@ -156,7 +156,7 @@ border-radius: 15px;
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>0</hour>
+      <hour>5</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2023</year>
@@ -308,6 +308,15 @@ background-color: rgb(114, 90, 54);</string>
    background-color: rgb(43, 69, 34);
    color: white;
 }</string>
+    </property>
+    <property name="alternatingRowColors">
+     <bool>false</bool>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::ExtendedSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
     </property>
     <row>
      <property name="text">

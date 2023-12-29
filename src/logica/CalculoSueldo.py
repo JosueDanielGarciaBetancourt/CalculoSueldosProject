@@ -13,18 +13,19 @@ class CalculoSueldo():
         self.DescuentoFaltas = None
         self.remuneracionComputable = None
         self.bonificacionesTotal = None
-        self.BonificacionSuplementaria = None
-        self.PagoHorasExtra = None
+        self.totalSuplementaria = None
+        self.totalHorasExtra = None
+        self.sueldoNeto = None
 
     def calcularBonificaciones(self):
-        self.PagoHorasExtra = self.factHorasExtra * self.horasExtra * ((self.sueldoBase / 30) / 8)
-        self.BonificacionSuplementaria = self.Suplementaria * self.sueldoBase
-        self.bonificacionesTotal = round(self.Movilidad + self.BonificacionSuplementaria + self.PagoHorasExtra, 2)
-        self.remuneracionComputable = self.sueldoBase + self.Movilidad + self.BonificacionSuplementaria
+        self.totalHorasExtra = self.factHorasExtra * self.horasExtra * ((self.sueldoBase / 30) / 8)
+        self.totalSuplementaria = self.Suplementaria * self.sueldoBase
+        self.bonificacionesTotal = round(self.Movilidad + self.totalSuplementaria + self.totalHorasExtra, 2)
+        self.remuneracionComputable = self.sueldoBase + self.Movilidad + self.totalSuplementaria
         return self.bonificacionesTotal
 
     def calcularDescuentos(self):
-        self.DescuentoFaltas = self.remuneracionComputable / 30 * self.diasFalta
+        self.DescuentoFaltas = (self.remuneracionComputable / 30) * self.diasFalta
         self.DescuentoTardanza = (((self.remuneracionComputable / 30) / 8) / 60) * self.minutosTardanza
         self.descuentosTotal = round(self.DescuentoFaltas + self.DescuentoTardanza, 2)
         return self.descuentosTotal
@@ -34,5 +35,5 @@ class CalculoSueldo():
         bonificaciones = self.calcularBonificaciones()
         descuentos = self.calcularDescuentos()
         sueldoNeto = sueldoBasico + bonificaciones - descuentos
-        sueldoNeto = round(sueldoNeto, 2)
-        return sueldoNeto
+        self.sueldoNeto = round(sueldoNeto, 2)
+        return self.sueldoNeto

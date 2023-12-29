@@ -1,5 +1,6 @@
 from modelo.tblBonificacion import tblBonificacion
 from modelo.tblTrabajador import tblTrabajador
+from modelo.tblDetalleMensualTrabajador import tblDetalleMensualTrabajador
 from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -41,3 +42,33 @@ class Updates:
                 print(f"Error al actualizar valor de bonificación: {e}")
                 session.rollback()
 
+    @staticmethod
+    def updateDetalleMensualTrabajador(idTrabajador, idMes, horasExtras,
+                                       minutosTardanzas, minutosJustificados, diasFalta,
+                                       diasJustificados, sueldoNeto):
+        with Session() as session:
+            try:
+                detalleMensualTrabajador = session.query(tblDetalleMensualTrabajador).filter_by(
+                    IDTrabajador=idTrabajador, IDMes=idMes).first()
+                if detalleMensualTrabajador:
+
+                    detalleMensualTrabajador.detalleHorasExtras = horasExtras
+                    detalleMensualTrabajador.detalleMinutosTardanzas = minutosTardanzas
+                    detalleMensualTrabajador.detalleMinutosJustificados = minutosJustificados
+                    detalleMensualTrabajador.detalleDiasFalta = diasFalta
+                    detalleMensualTrabajador.detalleDiasJustificados = diasJustificados
+                    detalleMensualTrabajador.detalleSueldoNeto = sueldoNeto
+                    session.merge(detalleMensualTrabajador)
+                    session.commit()
+                    print(f"Actualización exitosa del detalle mensual del trabajador {idTrabajador} del mes {idMes}\n"
+                          f"Horas extras: {horasExtras}\n"
+                          f"Minutos de tardanza: {minutosTardanzas}\n"
+                          f"Minutos justificados: {minutosJustificados}\n"
+                          f"Días faltados: {diasFalta}\n"
+                          f"Días justificados: {diasJustificados}\n"
+                          f"Sueldo Neto: {sueldoNeto}")
+                else:
+                    print(f"UPDATES. No se encontró el detalle mensual del trabajador {idTrabajador} del mes {idMes}")
+            except IntegrityError as e:
+                print(f"Error al actualizar el detalle mensual: {e}")
+                session.rollback()
