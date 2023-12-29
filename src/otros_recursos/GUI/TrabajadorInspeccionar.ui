@@ -885,7 +885,7 @@ color: rgb(211,190,10);
      <enum>QTabWidget::Triangular</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
@@ -4347,8 +4347,8 @@ background: white;</string>
    <widget class="QPushButton" name="pushButtonJustificar">
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>120</y>
+      <x>920</x>
+      <y>130</y>
       <width>131</width>
       <height>51</height>
      </rect>
@@ -4374,7 +4374,7 @@ tardanzas</string>
    <widget class="QPushButton" name="pushButtonRegistrarDatosMensuales">
     <property name="geometry">
      <rect>
-      <x>930</x>
+      <x>920</x>
       <y>50</y>
       <width>131</width>
       <height>51</height>
@@ -4401,10 +4401,10 @@ mensuales</string>
    <widget class="QPushButton" name="pushButtonPagarSueldo">
     <property name="geometry">
      <rect>
-      <x>1090</x>
-      <y>100</y>
-      <width>71</width>
-      <height>41</height>
+      <x>1060</x>
+      <y>90</y>
+      <width>131</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="cursor">
@@ -4421,7 +4421,8 @@ border-radius: 15px;
 background-color: rgb(0, 50, 125);</string>
     </property>
     <property name="text">
-     <string>Pagar</string>
+     <string>Pagar y generar 
+comprobante</string>
     </property>
    </widget>
    <zorder>tabWidgetTablas</zorder>

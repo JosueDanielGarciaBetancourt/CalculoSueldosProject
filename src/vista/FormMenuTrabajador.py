@@ -1,3 +1,4 @@
+import os
 from sqlite3 import DatabaseError
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate, Qt, pyqtSignal
@@ -11,6 +12,7 @@ from logica.CalculoSueldo import CalculoSueldo
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
+from logica.GeneradorPDF import GeneradorPDF
 import sys
 
 
@@ -349,6 +351,7 @@ class FormBuscarExistenteTrabajador:
 
 class FormInspeccionarTrabajador:
     def __init__(self, parent):
+        self.numBoleta = 0
         self.detalleMensual = None
         self.registroDetalleMensualObj = None
         self.calcularSueldoTrabObj = None
@@ -407,8 +410,10 @@ class FormInspeccionarTrabajador:
                 else:
                     print(f"No se registró el detalle del trabajador {self.IDTrabajador} en el mes: {self.IDMes}")
                     # Agregar detalle con datos iniciales ("" y 0)
-                    Inserts.insertDetalleMensualTrabajador(self.IDTrabajador, self.IDMes, self.horasExtras, self.minutosTardanzas,
-                                                           self.minutosJustificados, self.diasFalta, self.diasJustificados,
+                    Inserts.insertDetalleMensualTrabajador(self.IDTrabajador, self.IDMes, self.horasExtras,
+                                                           self.minutosTardanzas,
+                                                           self.minutosJustificados, self.diasFalta,
+                                                           self.diasJustificados,
                                                            self.sueldoNeto)
             else:
                 print("No se encontró trabajador para actualizar self.trabajador")
@@ -427,9 +432,9 @@ class FormInspeccionarTrabajador:
     def obtenerDetalles(self, horasExtras, minTardanza, diasFaltados):
         try:
             if self.trabajador:
-                self.horasExtras = horasExtras
-                self.minutosTardanzas = minTardanza
-                self.diasFalta = diasFaltados
+                self.horasExtras = float(horasExtras)
+                self.minutosTardanzas = float(minTardanza)
+                self.diasFalta = float(diasFaltados)
                 self.registrarDetalleMensual()
             else:
                 print("No existe trabajador para continuar con la obtención de detalles")
@@ -442,13 +447,19 @@ class FormInspeccionarTrabajador:
 
     def fillRowGUITablaResumen(self, row):
         try:
-            # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
             mes_nombre_item = QTableWidgetItem(str(self.mesObj.mesNombre))
             fecha_hora_item = QTableWidgetItem(self.detalleMensual.detalleFecha.strftime("%Y-%m-%d %H:%M:%S"))
             sueldo_base_item = QTableWidgetItem(str(self.trabajador.trabSueldoBase))
             totalBonificaciones_item = QTableWidgetItem(str(self.bonificaciones))
             totalDescuentos_item = QTableWidgetItem(str(self.descuentos))
             sueldoNeto_item = QTableWidgetItem(str(self.sueldoNeto))
+
+            print("\n\nMes Nombre:", self.mesObj.mesNombre)
+            print("Fecha y Hora:", self.detalleMensual.detalleFecha.strftime("%Y-%m-%d %H:%M:%S"))
+            print("Sueldo Base:", self.trabajador.trabSueldoBase)
+            print("Total Bonificaciones:", self.bonificaciones)
+            print("Total Descuentos:", self.descuentos)
+            print("Sueldo Neto:", self.sueldoNeto)
 
             listaItems = [mes_nombre_item, fecha_hora_item, sueldo_base_item, totalBonificaciones_item,
                           totalDescuentos_item, sueldoNeto_item]
@@ -503,13 +514,31 @@ class FormInspeccionarTrabajador:
         except Exception as e:
             print(f"Error inesperado al llenar la tabla resumen: {e}")
 
+    def fillRowGUITablaHistorialPagos(self, row, idBoletaPago):
+        try:
+            # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
+            mesPago_item = QTableWidgetItem(str(self.mesObj.mesNombre))
+            fechaHoraPago_item = QTableWidgetItem(self.detalleMensual.detalleFecha.strftime("%Y-%m-%d %H:%M:%S"))
+            idBoletaPago_item = QTableWidgetItem(str(idBoletaPago))
+            sueldoNeto_item = QTableWidgetItem(str(self.sueldoNeto))
+
+            listaItems = [mesPago_item, fechaHoraPago_item, idBoletaPago_item, sueldoNeto_item]
+
+            for item in listaItems:
+                item.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
+
+            # Establecer los items en la fila de la tabla
+            for col, item in enumerate(listaItems):
+                self.InspeccionarTrabajador.tablaHistorialPagos.setItem(row, col, item)
+        except Exception as e:
+            print(f"Error inesperado al llenar la tabla resumen: {e}")
+
     def registrarDetalleMensual(self):
         # En este caso se registrarán manualmante los detalles mensuales del trabajador
         # debido a que no se cuenta con otro módulo de donde se pueda obtener los días de falta,
         # minutos de tardanza y horas extra de manera automática
         try:
             self.detalleMensual = Queries.get_detalle_mensual_trabajador_by_id(self.IDTrabajador, self.IDMes)
-
             self.calcularDetallesSueldo()
             Updates.updateDetalleMensualTrabajador(self.IDTrabajador, self.IDMes, self.horasExtras,
                                                    self.minutosTardanzas, self.minutosJustificados,
@@ -530,7 +559,6 @@ class FormInspeccionarTrabajador:
             self.fillRowGUITablaResumen(int(self.mes_actual) - 1)
             # Tabla detallada
             self.fillRowGUITablaDetallada(int(self.mes_actual) - 1)
-
         except Exception as e:
             print(f"Error inesperado al registrar el detalle mensual: {e}")
 
@@ -538,22 +566,14 @@ class FormInspeccionarTrabajador:
         try:
             if self.detalleMensual:
                 print("Calculando sueldo")
-                t = self.trabajador
-                dm = self.detalleMensual
-                bhe = self.boniHorasExtra
-                bm = self.boniMovilidad
-                bs = self.boniSuplementaria
-
                 self.calcularSueldoTrabObj = CalculoSueldo(
-                    t.trabSueldoBase, dm.detalleHorasExtras,
-                    dm.detalleDiasFalta, dm.detalleMinutosTardanzas, bhe.bonValor,
-                    bm.bonValor, bs.bonValor)
-
+                    self.sueldoBase, self.horasExtras, self.diasFalta, self.minutosTardanzas,
+                    self.boniHorasExtra.bonValor, self.boniMovilidad.bonValor, self.boniSuplementaria.bonValor)
                 self.bonificaciones = self.calcularSueldoTrabObj.calcularBonificaciones()
                 self.descuentos = self.calcularSueldoTrabObj.calcularDescuentos()
                 self.sueldoNeto = self.calcularSueldoTrabObj.calcularSueldoNeto()
 
-                print(f"\nEl sueldo base es: {t.trabSueldoBase}")
+                print(f"\nEl sueldo base es: {self.sueldoBase}")
                 print(f"El monto de bonificaciones es: {self.bonificaciones}")
                 print(f"El monto de descuentos es: {self.descuentos}")
                 print(f"El sueldo NETO es: {self.sueldoNeto}\n")
@@ -561,6 +581,41 @@ class FormInspeccionarTrabajador:
                 print(f"\nAún no se registraron datos para el calculo de sueldo del mes {self.IDMes}")
         except Exception as e:
             print(f"Error al calcular el sueldo: {e}")
+
+    def generarIDBoletaPago(self):
+        try:
+            self.numBoleta = self.numBoleta + 1
+            idBoleta = f"BOLE{self.numBoleta:02d}-{self.IDTrabajador}"
+            return idBoleta
+        except Exception as e:
+            print(f"Ocurió un error inesperado al generar el ID de la nueva boleta de pago: {e}")
+
+    def generarPDF(self, idBoleta):
+        boleta_obj = Queries.get_boleta_pago_by_id(idBoleta)
+        ruta_absoluta = os.path.abspath('otros_recursos\\comprobante_pago.pdf')
+        GeneradorPDF.generar_pdf_comprobante_pago(boleta_obj, ruta_absoluta)
+
+    def pagarSueldo(self):
+        try:
+            if self.detalleMensual:
+                idBoleta = self.generarIDBoletaPago()
+                idTrabajador = self.IDTrabajador
+                suedoNeto = self.sueldoNeto
+                descuentoTotal = self.descuentos
+                bonificacionTotal = self.bonificaciones
+
+                # Almacenar en la BD
+                Inserts.insertBoletaPago(idBoleta, idTrabajador, suedoNeto, descuentoTotal, bonificacionTotal)
+
+                # Generar enlace PDF
+                self.generarPDF(idBoleta)
+
+                # Llenar la fila de la tabla de la GUI
+                self.fillRowGUITablaHistorialPagos(int(self.mes_actual) - 1, idBoleta)
+            else:
+                print("Aún no existe detalle del mes actual")
+        except Exception as e:
+            print(f"Ocurrió un error durante el pago de sueldo: {e}")
 
     def ocultar(self):
         self.InspeccionarTrabajador.close()
@@ -575,7 +630,7 @@ class FormInspeccionarTrabajador:
         # Botones
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
         self.InspeccionarTrabajador.pushButtonRegistrarDatosMensuales.clicked.connect(self.irFormRegistroDetalleMensual)
-
+        self.InspeccionarTrabajador.pushButtonPagarSueldo.clicked.connect(self.pagarSueldo)
         # Tablas
         ancho_maximo = 1080
         num_columnas_TablaResumen = 6
