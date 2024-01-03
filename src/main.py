@@ -1,5 +1,6 @@
 # TODO: Implementar el funcionamiento de ventana FormInspeccionarTrabajador
 
+# TODO: Crear otra tabla "tblDetalleCalculoSueldo" en la BD e implementar su funcionamiento
 # TODO: Implementar registro de detalle mensual en las tablas respectivas
 # TODO: Implementar pago de sueldo en la tabla historial de pagos
 # TODO: Generar PDF para el comprobante de pago
@@ -16,9 +17,9 @@
 
 # TODO: Testing
 
-from logica.EjemploOperacionesDB import EjemploOperacionesDB
-from modelo.Declarative_Base import reiniciarDB
-from vista.GestorSueldos import GestorSueldos
+from src.modelo.Declarative_Base import reiniciarDB
+from src.logica.EjemploOperacionesDB import EjemploOperacionesDB
+from src.vista.GestorSueldos import GestorSueldos
 from PyQt6.QtWidgets import QApplication
 
 if __name__ == '__main__':

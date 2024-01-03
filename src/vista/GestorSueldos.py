@@ -6,6 +6,7 @@ from vista.FormMenuBonificacion import FormMenuBonificacion, FormBonificacionVer
 from vista.FormMenuDetallesSW import FormMenuDetallesSW
 from vista.FormAcercaDeNosotros import FormAcercaDeNosotros
 from vista.FormAcercaDeGestorDeSueldosV1 import FormAcercaDeGestorDeSueldosV1
+from vista.Window_Utils import MensajesWindow
 
 
 class GestorSueldos:
@@ -142,8 +143,12 @@ class GestorSueldos:
         if self.BuscarExistenteTrabajador is not None:
             self.BuscarExistenteTrabajador.ocultar()
 
-        self.InspeccionarTrabajador.actualizarTrabajador(trabajador)
-        self.InspeccionarTrabajador.mostrar()
+        if trabajador:
+            self.InspeccionarTrabajador.actualizarTrabajador(trabajador)
+            self.InspeccionarTrabajador.mostrar()
+        else:
+            MensajesWindow.mostrarMensajeBusquedaError("No se encontró el trabajador a inspeccionar")
+            print("Gestor de ventanas. No se encontró el trabajador a inspeccionar.")
 
     def showMenuBonificacion(self):
         if self.MenuPrincipal is not None:

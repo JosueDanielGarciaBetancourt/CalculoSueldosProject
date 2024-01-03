@@ -1,9 +1,10 @@
-from modelo.tblMes import tblMes
-from modelo.tblBonificacion import tblBonificacion
-from modelo.tblTrabajador import tblTrabajador
-from modelo.tblDetalleMensualTrabajador import tblDetalleMensualTrabajador
-from modelo.tblBoletaPago import tblBoletaPago
-from modelo.tblDetalleBonificacion import tblDetalleBonificacion
+from src.modelo.modeladoTablas import tblMes
+from src.modelo.modeladoTablas import tblBonificacion
+from src.modelo.modeladoTablas import tblTrabajador
+from src.modelo.modeladoTablas import tblDetalleCalculoSueldo
+from src.modelo.modeladoTablas import tblDetalleMensualTrabajador
+from src.modelo.modeladoTablas import tblBoletaPago
+from src.modelo.modeladoTablas import tblDetalleBonificacion
 from modelo.Declarative_Base import Session
 from sqlalchemy import func
 
@@ -46,7 +47,6 @@ class Queries:
             trabajadores = session.query(tblTrabajador).filter(tblTrabajador.IDTrabajador.like(f"{idPrefijo}%")).all()
             return trabajadores
 
-
     @staticmethod
     def get_trabajador_by_name(nomb_apell_Trabajador):
         with Session() as session:
@@ -56,7 +56,8 @@ class Queries:
     @staticmethod
     def get_trabajadores_by_namePrefijo(namePrefijo):
         with Session() as session:
-            trabajadores = session.query(tblTrabajador).filter(tblTrabajador.trabNombreApellidos.like(f"{namePrefijo}%")).all()
+            trabajadores = session.query(tblTrabajador).filter(
+                tblTrabajador.trabNombreApellidos.like(f"{namePrefijo}%")).all()
             return trabajadores
 
     @staticmethod
@@ -71,6 +72,20 @@ class Queries:
             detalle_mensual = session.query(tblDetalleMensualTrabajador).filter_by(IDTrabajador=id_trabajador,
                                                                                    IDMes=id_mes).first()
             return detalle_mensual
+
+    @staticmethod
+    def get_all_detalle_mensual_trabajador_by_id(id_trabajador):
+        with Session() as session:
+            detalle_mensual_lista = session.query(tblDetalleMensualTrabajador).filter_by(
+                IDTrabajador=id_trabajador).all()
+            return detalle_mensual_lista
+
+    @staticmethod
+    def get_detalle_calculo_sueldo_by_id(id_trabajador, id_mes):
+        with Session() as session:
+            detalle_calculo_sueldo = session.query(tblDetalleCalculoSueldo).filter_by(IDTrabajador=id_trabajador,
+                                                                                      IDMes=id_mes).first()
+            return detalle_calculo_sueldo
 
     @staticmethod
     def get_boleta_pago_by_id(id_boleta_pago):

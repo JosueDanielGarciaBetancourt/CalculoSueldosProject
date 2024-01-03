@@ -8,6 +8,7 @@ class tblDetalleMensualTrabajador(Base):
     __tablename__ = 'tblDetalleMensualTrabajador'
     IDTrabajador = Column(String(8), ForeignKey('tblTrabajador.IDTrabajador'), primary_key=True)
     IDMes = Column(String(8), ForeignKey('tblMes.IDMes'), primary_key=True)
+    IDDetalleCalculoSueldo = Column(String(15), ForeignKey('tblDetalleCalculoSueldo.IDDetalleCalculoSueldo'), primary_key=True)
     detalleAnio = Column(String(4), nullable=False, default=str(datetime.now().year))  # Año actual
     detalleHorasExtras = Column(Integer, nullable=False)
     detalleMinutosTardanzas = Column(Integer, nullable=False)
@@ -22,6 +23,9 @@ class tblDetalleMensualTrabajador(Base):
 
     # Relación inversa con tblMes
     mes = relationship('tblMes', back_populates='detalles_mensuales')
+
+    # Relación con tblDetalleCalculoSueldo
+    detalleCalculoSueldo = relationship('tblDetalleCalculoSueldo', back_populates='detalleMensualTrabajador')
 
 
 """

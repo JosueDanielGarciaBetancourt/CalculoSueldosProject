@@ -16,6 +16,10 @@ class tblTrabajador(Base):
     detalles_mensuales = relationship('tblDetalleMensualTrabajador', back_populates='trabajador',
                                       cascade='all, delete, delete-orphan')
 
+    # Relación con tblDetalleCalculoSueldo
+    detalleCalculoSueldo = relationship('tblDetalleCalculoSueldo', back_populates='trabajador1',
+                                        cascade='all, delete, delete-orphan')
+
     # Relación con tblBoletaPago
     boleta_pago = relationship('tblBoletaPago', back_populates='trabajador',
                                cascade='all, delete, delete-orphan')

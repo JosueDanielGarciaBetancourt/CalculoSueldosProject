@@ -1,12 +1,13 @@
-from modelo.tblMes import tblMes
-from modelo.tblBonificacion import tblBonificacion
-from modelo.tblTrabajador import tblTrabajador
-from modelo.tblDetalleMensualTrabajador import tblDetalleMensualTrabajador
-from modelo.tblBoletaPago import tblBoletaPago
-from modelo.tblDetalleBonificacion import tblDetalleBonificacion
-from modelo.Declarative_Base import Session
+from src.modelo.modeladoTablas import tblMes
+from src.modelo.modeladoTablas import tblBonificacion
+from src.modelo.modeladoTablas import tblTrabajador
+from src.modelo.modeladoTablas import tblDetalleCalculoSueldo
+from src.modelo.modeladoTablas import tblDetalleMensualTrabajador
+from src.modelo.modeladoTablas import tblBoletaPago
+from src.modelo.modeladoTablas import tblDetalleBonificacion
+from src.modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
-from vista.Window_Utils import MensajesWindow
+from src.vista.Window_Utils import MensajesWindow
 from PyQt6.QtCore import pyqtSignal, QObject
 
 
@@ -47,13 +48,14 @@ class Inserts:
                     print(mensaje)
                     MensajesWindow.mostrarMensajeRegistroError(mensaje)
                 else:
-                    bonificacion = tblBonificacion(IDBonificacion=idBonificacion, bonTipo=boniTipo, bonUnidad=boniUnidad, bonValor=boniValor)
+                    bonificacion = tblBonificacion(IDBonificacion=idBonificacion, bonTipo=boniTipo,
+                                                   bonUnidad=boniUnidad, bonValor=boniValor)
                     session.add(bonificacion)
                     session.commit()
                     mensaje = f"Se registró correctamente la bonificación\n ID: {idBonificacion}\n" \
                               f" Tipo:  {boniTipo}\n Unidad: {boniUnidad}\n Valor: {boniValor}\n "
                     print(mensaje)
-                    #MensajesWindow.mostrarMensajeRegistroExito(mensaje)
+                    # MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error
@@ -76,7 +78,7 @@ class Inserts:
                     print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
                           f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
                     Inserts.signal.trabajadorInserted.emit()
-                    #MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
+                    # MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
             except IntegrityError as e:
                 mensaje = f"Error al agregar registro: {e}"
                 print(mensaje)
@@ -88,7 +90,36 @@ class Inserts:
                 MensajesWindow.mostrarMensajeRegistroError(mensaje)
 
     @staticmethod
-    def insertDetalleMensualTrabajador(idTrabajador, idMes, horasExtras, minutosTardanzas,
+    def insertDetalleCalculoSueldo(idTrabajador, idMes, idDetalleCalculoSueldo, montoMovilidad, montoSuplementario,
+                                   montoHorasExtras, montoRemunComputable, montoDctoFalta, montoDctoTardanzas,
+                                   totalBonificaciones, totalDctos):
+        with Session() as session:
+            try:
+                existing_DetalleCalculoSueldo = session.query(tblDetalleCalculoSueldo).filter_by(
+                    IDDetalleCalculoSueldo=idDetalleCalculoSueldo).first()
+                if existing_DetalleCalculoSueldo:
+                    print(f"El detalle de cálculo de sueldo del trabajador {idTrabajador} en el mes {idMes} "
+                          f"ya existe en la base de datos.")
+                else:
+                    detalleCalculoSueldo = tblDetalleCalculoSueldo(IDTrabajador=idTrabajador, IDMes=idMes,
+                                                                   IDDetalleCalculoSueldo=idDetalleCalculoSueldo,
+                                                                   calcSueldoMontoMovilidad=montoMovilidad,
+                                                                   calcSueldoMontoSuplementario=montoSuplementario,
+                                                                   calcSueldoMontoHorasExtras=montoHorasExtras,
+                                                                   calcSueldoMontoRemunComputable=montoRemunComputable,
+                                                                   calcSueldoMontoDctoFalta=montoDctoFalta,
+                                                                   calcSueldoMontoDctoTardanzas=montoDctoTardanzas,
+                                                                   calcSueldoTotalBonificaciones=totalBonificaciones,
+                                                                   calcSueldoTotalDctos=totalDctos)
+                    session.add(detalleCalculoSueldo)
+                    session.commit()
+                    print(f"Se agregó el detalle de cálculo de sueldo del trabajador {idTrabajador} en el mes {idMes}")
+            except IntegrityError as e:
+                print(f"Error al agregar registro a la tabla DetalleCalculoSueldo: {e}")
+                session.rollback()  # Revertir cambios en caso de error
+
+    @staticmethod
+    def insertDetalleMensualTrabajador(idTrabajador, idMes, idDetalleCalculoSueldo, horasExtras, minutosTardanzas,
                                        minutosJustificados, diasFalta, diasJustificados, sueldoNeto):
         with Session() as session:
             try:
@@ -99,6 +130,7 @@ class Inserts:
                           f"de datos.")
                 else:
                     detalleMensualTrabajador = tblDetalleMensualTrabajador(IDTrabajador=idTrabajador, IDMes=idMes,
+                                                                           IDDetalleCalculoSueldo=idDetalleCalculoSueldo,
                                                                            detalleHorasExtras=horasExtras,
                                                                            detalleMinutosTardanzas=minutosTardanzas,
                                                                            detalleMinutosJustificados=minutosJustificados,

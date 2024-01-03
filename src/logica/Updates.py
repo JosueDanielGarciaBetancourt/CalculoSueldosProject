@@ -1,6 +1,10 @@
-from modelo.tblBonificacion import tblBonificacion
-from modelo.tblTrabajador import tblTrabajador
-from modelo.tblDetalleMensualTrabajador import tblDetalleMensualTrabajador
+from src.modelo.modeladoTablas import tblMes
+from src.modelo.modeladoTablas import tblBonificacion
+from src.modelo.modeladoTablas import tblTrabajador
+from src.modelo.modeladoTablas import tblDetalleCalculoSueldo
+from src.modelo.modeladoTablas import tblDetalleMensualTrabajador
+from src.modelo.modeladoTablas import tblBoletaPago
+from src.modelo.modeladoTablas import tblDetalleBonificacion
 from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -43,7 +47,44 @@ class Updates:
                 session.rollback()
 
     @staticmethod
-    def updateDetalleMensualTrabajador(idTrabajador, idMes, horasExtras,
+    def updateDetalleCalculoSueldo(idTrabajador, idMes, idDetalleCalculoSueldo, montoMovilidad, montoSuplementario,
+                                   montoHorasExtras, montoRemunComputable, montoDctoFalta, montoDctoTardanzas,
+                                   totalBonificaciones, totalDctos):
+        with Session() as session:
+            try:
+                detalleCalculoSueldo = session.query(tblDetalleCalculoSueldo).filter_by(
+                    IDTrabajador=idTrabajador, IDMes=idMes).first()
+                if detalleCalculoSueldo:
+
+                    detalleCalculoSueldo.IDDetalleCalculoSueldo = idDetalleCalculoSueldo
+                    detalleCalculoSueldo.calcSueldoMontoMovilidad = montoMovilidad
+                    detalleCalculoSueldo.calcSueldoMontoSuplementario = montoSuplementario
+                    detalleCalculoSueldo.calcSueldoMontoHorasExtras = montoHorasExtras
+                    detalleCalculoSueldo.calcSueldoMontoRemunComputable = montoRemunComputable
+                    detalleCalculoSueldo.calcSueldoMontoDctoFalta = montoDctoFalta
+                    detalleCalculoSueldo.calcSueldoMontoDctoTardanzas = montoDctoTardanzas
+                    detalleCalculoSueldo.calcSueldoTotalBonificaciones = totalBonificaciones
+                    detalleCalculoSueldo.calcSueldoTotalDctos = totalDctos
+                    session.merge(detalleCalculoSueldo)
+                    session.commit()
+                    print(f"Actualización exitosa del detalle del cálculo del sueldo del trabajador {idTrabajador} del mes {idMes}\n"
+                          f"ID detalle calculo sueldo: {idDetalleCalculoSueldo}\n"
+                          f"Monto de movilidad: {montoMovilidad}\n"
+                          f"Monto suplementario: {montoSuplementario}\n"
+                          f"Monto de horas extras: {montoHorasExtras}\n"
+                          f"Monto de remuneración computable: {montoRemunComputable}\n"
+                          f"Monto de descuento por faltas: {montoDctoFalta}\n"
+                          f"Monto de descuento por tardanzas: {montoDctoTardanzas}\n"
+                          f"Total de bonificaciones: {totalBonificaciones}\n"
+                          f"Total de descuentos: {totalDctos}\n")
+                else:
+                    print(f"UPDATES. No se encontró el detalle del cálculo del sueldo del trabajador {idTrabajador} del mes {idMes}")
+            except IntegrityError as e:
+                print(f"Error al actualizar el detalle del cálculo mensual: {e}")
+                session.rollback()
+
+    @staticmethod
+    def updateDetalleMensualTrabajador(idTrabajador, idMes, idDetalleCalculoSueldo, horasExtras,
                                        minutosTardanzas, minutosJustificados, diasFalta,
                                        diasJustificados, sueldoNeto):
         with Session() as session:
@@ -52,6 +93,7 @@ class Updates:
                     IDTrabajador=idTrabajador, IDMes=idMes).first()
                 if detalleMensualTrabajador:
 
+                    detalleMensualTrabajador.IDDetalleCalculoSueldo = idDetalleCalculoSueldo
                     detalleMensualTrabajador.detalleHorasExtras = horasExtras
                     detalleMensualTrabajador.detalleMinutosTardanzas = minutosTardanzas
                     detalleMensualTrabajador.detalleMinutosJustificados = minutosJustificados

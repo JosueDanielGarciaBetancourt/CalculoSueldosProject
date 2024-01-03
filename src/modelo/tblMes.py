@@ -12,6 +12,6 @@ class tblMes(Base):
     detalles_mensuales = relationship('tblDetalleMensualTrabajador', back_populates='mes',
                                       cascade='all, delete, delete-orphan')
 
-    def __init__(self, IDMes, mesNombre):
-        self.IDMes = IDMes
-        self.mesNombre = mesNombre
+    # Relación con tblDetalleCalculoSueldo
+    detalles_mensuales1 = relationship('tblDetalleCalculoSueldo', back_populates='mes1',
+                                       cascade='all, delete, delete-orphan')

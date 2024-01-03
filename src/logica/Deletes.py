@@ -1,6 +1,10 @@
-from modelo.tblMes import tblMes
-from modelo.tblBonificacion import tblBonificacion
-from modelo.tblTrabajador import tblTrabajador
+from src.modelo.modeladoTablas import tblMes
+from src.modelo.modeladoTablas import tblBonificacion
+from src.modelo.modeladoTablas import tblTrabajador
+from src.modelo.modeladoTablas import tblDetalleCalculoSueldo
+from src.modelo.modeladoTablas import tblDetalleMensualTrabajador
+from src.modelo.modeladoTablas import tblBoletaPago
+from src.modelo.modeladoTablas import tblDetalleBonificacion
 from modelo.Declarative_Base import Session
 from sqlalchemy.exc import IntegrityError
 from PyQt6.QtCore import pyqtSignal, QObject

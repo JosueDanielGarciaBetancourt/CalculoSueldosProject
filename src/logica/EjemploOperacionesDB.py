@@ -1,12 +1,12 @@
-from logica.Inserts import Inserts, MensajesWindow
-from logica.Deletes import Deletes
-from logica.Updates import Updates
-from logica.Queries import Queries
-from logica.CalculoSueldo import CalculoSueldo
+from src.logica.Inserts import Inserts
+from src.logica.Deletes import Deletes
+from src.logica.Updates import Updates
+from src.logica.Queries import Queries
+from src.logica.CalculoSueldo import CalculoSueldo
 
 
 def EjemploOperacionesDB():
-    print("\n==============INSERTS==============")
+    print("\n========================================================INSERTS========================================================")
     print("\nMESES")
 
     # Insertar meses
@@ -40,11 +40,22 @@ def EjemploOperacionesDB():
     Inserts.insertTrabajador("12345401", "Eduardo Campos", 1500.00, "CIO7")
     Inserts.insertTrabajador("87654321", "Gian Piere", 1200.00, "CIO8")
 
+    try:
+        print("\nDETALLE CÁLCULO SUELDO")
+        Inserts.insertDetalleCalculoSueldo("77043114", "MES11", "77043114-MES11", "1000", "200",
+                                           "50", "500", "100", "50", "1250", "150")
+        Inserts.insertDetalleCalculoSueldo("77043114", "MES12", "77043114-MES12", "500", "100",
+                                           "100", "500", "200", "50", "1250", "200")
+        Inserts.insertDetalleCalculoSueldo("12345678", "MES05", "12345678-MES05", "1000", "200",
+                                           "50", "500", "100", "50", "1250", "150")
+    except Exception as e:
+        print(e)
+
     print("\nDETALLE MENSUAL TRABAJADOR")
     # Insertar detalle mensual trabajador
-    Inserts.insertDetalleMensualTrabajador("77043114", "MES11", 3, 60, 30, 1, 1, 2000.00)
-    Inserts.insertDetalleMensualTrabajador("77043114", "MES12", 3, 60, 30, 1, 1, 2000.00)
-    Inserts.insertDetalleMensualTrabajador("12345678", "MES05", 3, 60, 30, 1, 1, 2000.00)
+    Inserts.insertDetalleMensualTrabajador("77043114", "MES11", "77043114-MES11", 3, 60, 30, 1, 1, 2000.00)
+    Inserts.insertDetalleMensualTrabajador("77043114", "MES12", "77043114-MES12", 3, 60, 30, 1, 1, 2000.00)
+    Inserts.insertDetalleMensualTrabajador("12345678", "MES05", "12345678-MES05", 3, 60, 30, 1, 1, 2000.00)
 
     print("\nBOLETA DE PAGO")
     # Insertar boleta pago
@@ -57,8 +68,8 @@ def EjemploOperacionesDB():
     Inserts.insertDetalleBonificacion("BONI02", "BOLE0177043114", 1000.00)
     Inserts.insertDetalleBonificacion("BONI03", "BOLE0112345678", 750.00)
 
-    print("\n==============DELETES==============")
-    print("\nMES")
+    print("\n========================================================DELETES========================================================")
+    # print("\nMES")
     # Eliminando un mes
     # Deletes.deleteMes("MES12")
 
@@ -66,11 +77,11 @@ def EjemploOperacionesDB():
     # Eliminando un trabajador (esto borrará registros en boletaPago)
     Deletes.deleteTrabajador("77043114")
 
-    print("\nBONIFICACIÓN")
+    # print("\nBONIFICACIÓN")
     # Eliminando una bonificación (esto borrará registros en detalleBonificacion)
     # Delete.deleteBonificacion("BONI02")
 
-    print("\n==============UPDATES==============")
+    print("\n========================================================UPDATES========================================================")
 
     print("\nSUELDO BASE")
     Updates.updateSueldoBase("12345678", 100)
@@ -78,7 +89,7 @@ def EjemploOperacionesDB():
     print("\nBONIFICACIÓN")
     Updates.updateValorBonificacion("BONI01", 0.6)
 
-    print("\n==============QUERIES==============\n")
+    print("\n========================================================QUERIES========================================================\n")
 
     # Ejemplo: Obtener un mes por ID
     print("MES")
@@ -120,9 +131,11 @@ def EjemploOperacionesDB():
     # Ejemplo: Obtener un detalle mensual de trabajador por ID de trabajador y ID de mes
     print("DETALLE MENSUAL")
     detalle_mensual = Queries.get_detalle_mensual_trabajador_by_id("12345678", "MES05")
+
     if detalle_mensual:
         print("ID del Trabajador: ", detalle_mensual.IDTrabajador)
         print("ID del Mes: ", detalle_mensual.IDMes)
+        print("ID del detalle calculo sueldo: ", detalle_mensual.IDDetalleCalculoSueldo)
         print("Año: ", detalle_mensual.detalleAnio)
         print("Horas extras: ", detalle_mensual.detalleHorasExtras)
         print("Minutos de tardanza: ", detalle_mensual.detalleMinutosTardanzas)
@@ -162,7 +175,7 @@ def EjemploOperacionesDB():
     else:
         print("No se encontró el detalle de bonificación.")
 
-    print("\n==============PRUEBA CÁLCULO SUELDO==============\n")
+    print("\n========================================================PRUEBA CÁLCULO SUELDO========================================================\n")
 
     trab02 = Queries.get_trabajador_by_id("12345678")
     detalleTrab02 = Queries.get_detalle_mensual_trabajador_by_id("12345678", "MES05")
@@ -170,11 +183,11 @@ def EjemploOperacionesDB():
     Movilidad = Queries.get_bonificacion_by_id("BONI02")
     factSuplementaria = Queries.get_bonificacion_by_id("BONI03")
 
+    print(f"Trabajador obj.: {trab02}")
     print("BONIFICACIONES: \n")
     print("Factor de horas extra: ", )
     print("Movilidad: ", factHorasExtra.bonValor)
     print("Factor de bonif. Suplementaria: ", factSuplementaria.bonValor)
-    print("12345678: \n")
     print("ID del Trabajador: ", trab02.IDTrabajador)
     print("Nombre y Apellidos: ", trab02.trabNombreApellidos)
     print("Sueldo Base: ", trab02.trabSueldoBase)

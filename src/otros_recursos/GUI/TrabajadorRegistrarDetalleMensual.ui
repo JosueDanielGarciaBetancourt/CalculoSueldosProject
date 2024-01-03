@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>180</height>
+    <width>278</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -246,26 +246,79 @@ border-radius: 15px;
      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QComboBox" name="comboBoxMeses">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>10</y>
-      <width>91</width>
-      <height>31</height>
+      <x>160</x>
+      <y>14</y>
+      <width>86</width>
+      <height>21</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">font: 700 bold 12pt &quot;Calibri&quot;;
-color: rgb(226, 191, 0);
-</string>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
-    <property name="frameShadow">
-     <enum>QFrame::Plain</enum>
+    <property name="currentIndex">
+     <number>8</number>
     </property>
-    <property name="text">
-     <string>SEPTIEMBRE</string>
+    <property name="sizeAdjustPolicy">
+     <enum>QComboBox::AdjustToContents</enum>
     </property>
+    <item>
+     <property name="text">
+      <string>Enero</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Febrero</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Marzo</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Abril</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Junio</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Julio</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Agosto</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Septiembre</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Octubre</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Noviembre</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Diciembre</string>
+     </property>
+    </item>
    </widget>
   </widget>
  </widget>
