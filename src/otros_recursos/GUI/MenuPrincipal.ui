@@ -53,7 +53,7 @@ background-color: rgb(0, 0, 0);
      <enum>Qt::AutoText</enum>
     </property>
     <property name="pixmap">
-     <pixmap>darkWolf.png</pixmap>
+     <pixmap resource="recursos.qrc">:/imagenes/darkWolf.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -369,6 +369,8 @@ color: rgb(80, 228, 94);
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="recursos.qrc"/>
+ </resources>
  <connections/>
 </ui>

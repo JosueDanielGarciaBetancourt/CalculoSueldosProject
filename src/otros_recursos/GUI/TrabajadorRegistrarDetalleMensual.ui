@@ -246,79 +246,49 @@ border-radius: 15px;
      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBoxMeses">
+   <widget class="QLineEdit" name="lineEditMes">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>14</y>
-      <width>86</width>
-      <height>21</height>
+      <x>150</x>
+      <y>16</y>
+      <width>81</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="tabletTracking">
+     <bool>false</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
     </property>
-    <property name="currentIndex">
-     <number>8</number>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
-    <property name="sizeAdjustPolicy">
-     <enum>QComboBox::AdjustToContents</enum>
+    <property name="styleSheet">
+     <string notr="true">font: 500 bold 12pt &quot;Calibri&quot;;
+color: rgb(50, 50, 0);
+border-radius: 15px;
+text-align: center;
+</string>
     </property>
-    <item>
-     <property name="text">
-      <string>Enero</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Febrero</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Marzo</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Abril</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Junio</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Julio</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Agosto</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Septiembre</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Octubre</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Noviembre</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Diciembre</string>
-     </property>
-    </item>
+    <property name="text">
+     <string>Enero</string>
+    </property>
+    <property name="maxLength">
+     <number>15</number>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Normal</enum>
+    </property>
    </widget>
   </widget>
  </widget>

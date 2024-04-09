@@ -74,11 +74,17 @@ class tblDetalleCalculoSueldo(Base):
     detalleMensualTrabajador = relationship('tblDetalleMensualTrabajador', back_populates='detalleCalculoSueldo')
 
 
+@staticmethod
+def obtenerFechaAhora():
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+
 class tblDetalleMensualTrabajador(Base):
     __tablename__ = 'tblDetalleMensualTrabajador'
     IDTrabajador = Column(String(8), ForeignKey('tblTrabajador.IDTrabajador'), primary_key=True)
     IDMes = Column(String(8), ForeignKey('tblMes.IDMes'), primary_key=True)
-    IDDetalleCalculoSueldo = Column(String(15), ForeignKey('tblDetalleCalculoSueldo.IDDetalleCalculoSueldo'), primary_key=True)
+    IDDetalleCalculoSueldo = Column(String(15), ForeignKey('tblDetalleCalculoSueldo.IDDetalleCalculoSueldo'),
+                                    primary_key=True)
     detalleAnio = Column(String(4), nullable=False, default=str(datetime.now().year))  # Año actual
     detalleHorasExtras = Column(Integer, nullable=False)
     detalleMinutosTardanzas = Column(Integer, nullable=False)
@@ -86,7 +92,8 @@ class tblDetalleMensualTrabajador(Base):
     detalleDiasFalta = Column(Integer, nullable=False)
     detalleDiasJustificados = Column(Integer, nullable=False)
     detalleSueldoNeto = Column(Float, nullable=False)
-    detalleFecha = Column(DateTime(), default=datetime.now)  # YYYY-MM-DD hh-mm-ss
+    detalleFechaFormateada = Column(String(19), default=obtenerFechaAhora())  # YYYY-MM-DD hh-mm-ss
+    detalleFecha = Column(DateTime(), default=datetime.now)  # YYYY-MM-DD hh-mm-ss-ms
 
     # Relación inversa con tblTrabajador
     trabajador = relationship('tblTrabajador', back_populates='detalles_mensuales')

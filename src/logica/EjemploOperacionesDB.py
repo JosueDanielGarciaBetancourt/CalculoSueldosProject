@@ -3,6 +3,7 @@ from src.logica.Deletes import Deletes
 from src.logica.Updates import Updates
 from src.logica.Queries import Queries
 from src.logica.CalculoSueldo import CalculoSueldo
+from datetime import datetime
 
 
 def EjemploOperacionesDB():

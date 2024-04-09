@@ -1,18 +1,20 @@
 import os
 from sqlite3 import DatabaseError
+from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtCore import QUrl, QTimer
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import QDate, Qt, pyqtSignal
-from vista.Window_Utils import MensajesWindow
-from vista.Window_Utils import center, returnDirectorioGUI
-from logica.Inserts import Inserts, InsertSignal
-from logica.Deletes import Deletes
-from logica.Updates import Updates
-from logica.Queries import Queries
-from logica.CalculoSueldo import CalculoSueldo
+from src.vista.Window_Utils import MensajesWindow
+from src.vista.Window_Utils import center, returnDirectorioGUI
+from src.logica.Inserts import Inserts
+from src.logica.Deletes import Deletes
+from src.logica.Updates import Updates
+from src.logica.Queries import Queries
+from src.logica.CalculoSueldo import CalculoSueldo
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
-from logica.GeneradorPDF import GeneradorPDF
+from src.logica.GeneradorPDF import GeneradorPDF
 import sys
 
 
@@ -354,6 +356,7 @@ class FormBuscarExistenteTrabajador:
 
 class FormInspeccionarTrabajador:
     def __init__(self, parent):
+        self.ruta_absoluta = ""
         self.detalle_calculo_sueldo = None
         self.IDDetalleCalculoSueldo = ""
         self.parent = parent
@@ -370,6 +373,7 @@ class FormInspeccionarTrabajador:
         self.anio_actual = self.fecha_hora_actual.year
         self.mes_actual = "{:02d}".format(
             self.fecha_hora_actual.month)  # Se obtiene el número de mes actual con un 0 al inicio de ser necesario
+        self.fecha_hora_simulada = None
         self.IDMes_actual = "MES" + self.mes_actual
         self.mes_actual_Obj = None
 
@@ -399,7 +403,53 @@ class FormInspeccionarTrabajador:
 
         self.InspeccionarTrabajador = uic.loadUi(f"{directorio_ui}\\TrabajadorInspeccionar.ui")
         center(self.InspeccionarTrabajador)
+        self.InspeccionarTrabajador.tablaResumen.cellClicked.connect(self.toggleRowSelectionTablaResumen)
+        self.InspeccionarTrabajador.tablaDetallada.cellClicked.connect(self.toggleRowSelectionTablaDetallada)
+        self.InspeccionarTrabajador.tablaHistorialPagos.cellClicked.connect(self.toggleRowSelectionTablaHistorialPagos)
+        self.lastClickedRowResumen = None
+        self.lastClickedRowDetallada= None
+        self.lastClickedRowHistorialPagos = None
+        self.lastClickedColumnHistorialPagos = None
         self.initGUI()
+
+    def toggleRowSelectionTablaResumen(self, row, column):
+        if row == self.lastClickedRowResumen:
+            self.InspeccionarTrabajador.tablaResumen.clearSelection()
+            self.lastClickedRowResumen = None
+            print("Limpiar selección")
+        else:
+            self.lastClickedRowResumen = row
+            print("Seleccionar fila")
+
+    def toggleRowSelectionTablaDetallada(self, row, column):
+        if row == self.lastClickedRowDetallada:
+            self.InspeccionarTrabajador.tablaDetallada.clearSelection()
+            self.lastClickedRowDetallada = None
+            print("Limpiar selección")
+        else:
+            self.lastClickedRowDetallada = row
+            print("Seleccionar fila")
+
+    def toggleRowSelectionTablaHistorialPagos(self, row, column):
+        if row == self.lastClickedRowHistorialPagos and column == self.lastClickedColumnHistorialPagos:
+            self.InspeccionarTrabajador.tablaHistorialPagos.clearSelection()
+            self.lastClickedRowHistorialPagos = None
+            self.lastClickedColumnHistorialPagos = None
+            print("Limpiar selección")
+        else:
+            self.lastClickedRowHistorialPagos = row
+            self.lastClickedColumnHistorialPagos = column
+            print("Seleccionar fila")
+
+            if column == 4:
+                # Obtiene la fila y el ID de la boleta de pago desde la tabla
+                idBoletaPago = self.InspeccionarTrabajador.tablaHistorialPagos.item(row, 2).text()
+
+                # Genera el nombre de archivo PDF correspondiente
+                ruta_pdf = os.path.abspath(f'otros_recursos\\Comprobantes de pago generados\\{idBoletaPago}.pdf')
+
+                # Abre el archivo PDF
+                self.open_file(ruta_pdf)
 
     def actualizarTrabajador(self, trabajador_actual):
         try:
@@ -421,8 +471,10 @@ class FormInspeccionarTrabajador:
             # Vaciar todas las tablas
             self.InspeccionarTrabajador.tablaResumen.clearContents()
             self.InspeccionarTrabajador.tablaDetallada.clearContents()
-            self.listaDetallesMensuales = Queries.get_all_detalle_mensual_trabajador_by_id(self.IDTrabajador)
+            self.InspeccionarTrabajador.tablaHistorialPagos.clearContents()
 
+            self.listaDetallesMensuales = Queries.get_all_detalle_mensual_trabajador_by_id(self.IDTrabajador)
+            
             if self.listaDetallesMensuales is None or not self.listaDetallesMensuales:
                 print(f"Aún no se registró algún detalle mensual del trabajador con ID {self.IDTrabajador} en "
                       f"la lista detalles.")
@@ -431,8 +483,9 @@ class FormInspeccionarTrabajador:
                     # Actualizar detalles
                     self.detalleMensual = detalleMensualRegistrado
                     self.mes_seleccionado_Obj = Queries.get_mes_by_id(self.detalleMensual.IDMes)
-                    self.detalle_calculo_sueldo = Queries.get_detalle_calculo_sueldo_by_id(self.detalleMensual.IDTrabajador,
-                                                                                           self.detalleMensual.IDMes)
+                    self.detalle_calculo_sueldo = Queries.get_detalle_calculo_sueldo_by_id(
+                        self.detalleMensual.IDTrabajador,
+                        self.detalleMensual.IDMes)
                     # Rellenar las tablas para cada detalle registrado
                     numMesRegistrado = self.obtenerNumMes(self.mes_seleccionado_Obj.mesNombre)
                     self.fillRowGUITablaResumen(numMesRegistrado - 1)
@@ -456,7 +509,8 @@ class FormInspeccionarTrabajador:
         self.InspeccionarTrabajador.show()
 
     def irFormRegistroDetalleMensual(self):
-        self.registroDetalleMensualObj = FormRegistroDetalleMensual(self)
+        nombMes = self.InspeccionarTrabajador.comboBoxSimularMes.currentText()
+        self.registroDetalleMensualObj = FormRegistroDetalleMensual(self, nombMes)
         self.registroDetalleMensualObj.mostrar()
 
     def fillRowGUITablaResumen(self, row):
@@ -468,7 +522,7 @@ class FormInspeccionarTrabajador:
 
         try:
             mes_nombre_item = QTableWidgetItem(str(self.mes_seleccionado_Obj.mesNombre))
-            fecha_hora_item = QTableWidgetItem(self.detalleMensual.detalleFecha.strftime("%Y-%m-%d %H:%M:%S"))
+            fecha_hora_item = QTableWidgetItem(str(self.detalleMensual.detalleFecha))
             sueldo_base_item = QTableWidgetItem(str(self.trabajador.trabSueldoBase))
             totalBonificaciones_item = QTableWidgetItem(str(self.detalle_calculo_sueldo.calcSueldoTotalBonificaciones))
             totalDescuentos_item = QTableWidgetItem(str(self.detalle_calculo_sueldo.calcSueldoTotalDctos))
@@ -507,7 +561,7 @@ class FormInspeccionarTrabajador:
         try:
             # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
             mes_nombre_item = QTableWidgetItem(str(self.mes_seleccionado_Obj.mesNombre))
-            fecha_hora_item = QTableWidgetItem(self.detalleMensual.detalleFecha.strftime("%Y-%m-%d %H:%M:%S"))
+            fecha_hora_item = QTableWidgetItem(str(self.detalleMensual.detalleFecha))
             apell_nomb_item = QTableWidgetItem(str(self.trabajador.trabNombreApellidos))
             min_tardanza_item = QTableWidgetItem(str(self.detalleMensual.detalleMinutosTardanzas))
             dias_falta_item = QTableWidgetItem(str(self.detalleMensual.detalleDiasFalta))
@@ -519,7 +573,8 @@ class FormInspeccionarTrabajador:
             total_horaExtra = QTableWidgetItem(str(self.detalle_calculo_sueldo.calcSueldoMontoHorasExtras))
             monto_remunComputable = QTableWidgetItem(str(self.detalle_calculo_sueldo.calcSueldoMontoRemunComputable))
             monto_dctoFaltas = QTableWidgetItem(str(round(self.detalle_calculo_sueldo.calcSueldoMontoDctoFalta, 2)))
-            monto_dctoTardanzas = QTableWidgetItem(str(round(self.detalle_calculo_sueldo.calcSueldoMontoDctoTardanzas, 2)))
+            monto_dctoTardanzas = QTableWidgetItem(
+                str(round(self.detalle_calculo_sueldo.calcSueldoMontoDctoTardanzas, 2)))
             sueldo_base_item = QTableWidgetItem(str(self.trabajador.trabSueldoBase))
             totalBonificaciones_item = QTableWidgetItem(str(self.detalle_calculo_sueldo.calcSueldoTotalBonificaciones))
             totalDescuentos_item = QTableWidgetItem(str(self.detalle_calculo_sueldo.calcSueldoTotalDctos))
@@ -545,15 +600,17 @@ class FormInspeccionarTrabajador:
         try:
             # Crear items para cada columna y convertirlos a cadena para mostrarlos en la tabla
             mesPago_item = QTableWidgetItem(str(self.mes_seleccionado_Obj.mesNombre))
-            fechaHoraPago_item = QTableWidgetItem(self.detalleMensual.detalleFecha.strftime("%Y-%m-%d %H:%M:%S"))
+            fechaHoraPago_item = QTableWidgetItem(str(self.detalleMensual.detalleFecha))
             idBoletaPago_item = QTableWidgetItem(str(idBoletaPago))
             sueldoNeto_item = QTableWidgetItem(str(self.sueldoNeto))
+            enlace_item = QTableWidgetItem(str("Click aquí"))
 
-            listaItems = [mesPago_item, fechaHoraPago_item, idBoletaPago_item, sueldoNeto_item]
+            listaItems = [mesPago_item, fechaHoraPago_item, idBoletaPago_item, sueldoNeto_item, enlace_item]
 
             for item in listaItems:
                 item.setTextAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
 
+            print("FILAAAAA: ", row)
             # Establecer los items en la fila de la tabla
             for col, item in enumerate(listaItems):
                 self.InspeccionarTrabajador.tablaHistorialPagos.setItem(row, col, item)
@@ -579,7 +636,7 @@ class FormInspeccionarTrabajador:
             }
             # Convertir a minúsculas antes de buscar en el diccionario
             nombMes = nombMes.lower()
-            return meses.get(nombMes, 0)
+            return meses.get(nombMes, 0)  # 0 es el valor por default
         except Exception as e:
             print(f"Error inesperado durante el registro del mes ingresado: {e}")
 
@@ -610,12 +667,16 @@ class FormInspeccionarTrabajador:
 
                 # Almacenar en la BD
                 if self.detalleMensual:
-                    Updates.updateDetalleMensualTrabajador(self.IDTrabajador, self.IDMesSelec, self.IDDetalleCalculoSueldo,
-                                                           self.horasExtras, self.minutosTardanzas, self.minutosJustificados,
+                    Updates.updateDetalleMensualTrabajador(self.IDTrabajador, self.IDMesSelec,
+                                                           self.IDDetalleCalculoSueldo,
+                                                           self.horasExtras, self.minutosTardanzas,
+                                                           self.minutosJustificados,
                                                            self.diasFalta, self.diasJustificados, self.sueldoNeto)
                 else:
-                    Inserts.insertDetalleMensualTrabajador(self.IDTrabajador, self.IDMesSelec, self.IDDetalleCalculoSueldo,
-                                                           self.horasExtras, self.minutosTardanzas, self.minutosJustificados,
+                    Inserts.insertDetalleMensualTrabajador(self.IDTrabajador, self.IDMesSelec,
+                                                           self.IDDetalleCalculoSueldo,
+                                                           self.horasExtras, self.minutosTardanzas,
+                                                           self.minutosJustificados,
                                                            self.diasFalta, self.diasJustificados, self.sueldoNeto)
 
                 self.listaDetallesMensuales.append(self.detalleMensual)
@@ -639,7 +700,8 @@ class FormInspeccionarTrabajador:
                 # Tabla detallada
                 self.fillRowGUITablaDetallada(int(self.numMesSelec) - 1)
             else:
-                print(f"Registrar detalle mensual. No se encontró detalle del cálculo de sueldo: {self.detalle_calculo_sueldo:}")
+                print(
+                    f"Registrar detalle mensual. No se encontró detalle del cálculo de sueldo: {self.detalle_calculo_sueldo:}")
         except Exception as e:
             print(f"Error inesperado al registrar el detalle mensual: {e}")
 
@@ -654,20 +716,30 @@ class FormInspeccionarTrabajador:
             self.totalDctos = self.calcularSueldoTrabObj.calcularDescuentos()
             self.sueldoNeto = self.calcularSueldoTrabObj.calcularSueldoNeto()
 
+            self.detalle_calculo_sueldo = Queries.get_detalle_calculo_sueldo_by_id(self.IDTrabajador, self.IDMesSelec)
+
             self.IDDetalleCalculoSueldo = str(self.IDTrabajador + self.IDMesSelec)
 
             if self.detalle_calculo_sueldo:
-                Updates.updateDetalleCalculoSueldo(self.IDTrabajador, self.IDMesSelec, self.IDDetalleCalculoSueldo, self.calcularSueldoTrabObj.montoMovilidad,
-                                                   self.calcularSueldoTrabObj.totalSuplementaria, self.calcularSueldoTrabObj.totalHorasExtra,
+                Updates.updateDetalleCalculoSueldo(self.IDTrabajador, self.IDMesSelec, self.IDDetalleCalculoSueldo,
+                                                   self.calcularSueldoTrabObj.montoMovilidad,
+                                                   self.calcularSueldoTrabObj.totalSuplementaria,
+                                                   self.calcularSueldoTrabObj.totalHorasExtra,
                                                    self.calcularSueldoTrabObj.remuneracionComputable,
-                                                   self.calcularSueldoTrabObj.DescuentoFaltas, self.calcularSueldoTrabObj.DescuentoTardanzas,
-                                                   self.calcularSueldoTrabObj.bonificacionesTotal, self.calcularSueldoTrabObj.descuentosTotal)
+                                                   self.calcularSueldoTrabObj.DescuentoFaltas,
+                                                   self.calcularSueldoTrabObj.DescuentoTardanzas,
+                                                   self.calcularSueldoTrabObj.bonificacionesTotal,
+                                                   self.calcularSueldoTrabObj.descuentosTotal)
             else:
-                Inserts.insertDetalleCalculoSueldo(self.IDTrabajador, self.IDMesSelec, self.IDDetalleCalculoSueldo, self.calcularSueldoTrabObj.montoMovilidad,
-                                                   self.calcularSueldoTrabObj.totalSuplementaria, self.calcularSueldoTrabObj.totalHorasExtra,
+                Inserts.insertDetalleCalculoSueldo(self.IDTrabajador, self.IDMesSelec, self.IDDetalleCalculoSueldo,
+                                                   self.calcularSueldoTrabObj.montoMovilidad,
+                                                   self.calcularSueldoTrabObj.totalSuplementaria,
+                                                   self.calcularSueldoTrabObj.totalHorasExtra,
                                                    self.calcularSueldoTrabObj.remuneracionComputable,
-                                                   self.calcularSueldoTrabObj.DescuentoFaltas, self.calcularSueldoTrabObj.DescuentoTardanzas,
-                                                   self.calcularSueldoTrabObj.bonificacionesTotal, self.calcularSueldoTrabObj.descuentosTotal)
+                                                   self.calcularSueldoTrabObj.DescuentoFaltas,
+                                                   self.calcularSueldoTrabObj.DescuentoTardanzas,
+                                                   self.calcularSueldoTrabObj.bonificacionesTotal,
+                                                   self.calcularSueldoTrabObj.descuentosTotal)
 
             self.detalle_calculo_sueldo = Queries.get_detalle_calculo_sueldo_by_id(self.IDTrabajador, self.IDMesSelec)
 
@@ -679,38 +751,118 @@ class FormInspeccionarTrabajador:
         except Exception as e:
             print(f"Error al calcular el sueldo: {e}")
 
-    def generarIDBoletaPago(self):
+    def generarIDBoletaPago(self, anio, numMes):
         try:
             self.numBoleta = self.numBoleta + 1
-            idBoleta = f"BOLE{self.numBoleta:02d}-{self.IDTrabajador}"
+            idBoleta = f"BOLE{self.IDTrabajador}-{anio}{numMes:02d}-{self.numBoleta:03d}"
             return idBoleta
         except Exception as e:
             print(f"Ocurrió un error inesperado al generar el ID de la nueva boleta de pago: {e}")
 
     def generarPDF(self, idBoleta):
         boleta_obj = Queries.get_boleta_pago_by_id(idBoleta)
-        ruta_absoluta = os.path.abspath('otros_recursos\\Comprobantes de pago generados\\comprobante_pago.pdf')
-        GeneradorPDF.generar_pdf_comprobante_pago(boleta_obj, ruta_absoluta)
+        self.ruta_absoluta = os.path.abspath(f'otros_recursos\\Comprobantes de pago generados\\{idBoleta}.pdf')
+        GeneradorPDF.generar_pdf_comprobante_pago(boleta_obj, self.ruta_absoluta)
+        self.open_file(self.ruta_absoluta)
+
+    @staticmethod
+    def open_file(path):
+        try:
+            ruta_archivo = path  # Reemplaza con la ruta de tu archivo
+            with open(ruta_archivo, 'r') as archivo:
+                contenido = archivo.read()
+
+            # Abre el archivo PDF en el visor predeterminado del sistema
+            QDesktopServices.openUrl(QUrl.fromLocalFile(ruta_archivo))
+        except FileNotFoundError:
+            print(f"El archivo en la ruta '{ruta_archivo}' no fue encontrado.")
+            return None  # Puedes devolver None o algún otro valor que indique que el archivo no fue encontrado
+        except Exception as e:
+            print(f"Ocurrió un error al abrir archivo: {e}")
+            return None  # Puedes devolver None o algún otro valor que indique un error
+
+    def returnRowDatetimeSelected(self):
+        try:
+            selected = False
+            selectedDatetime = ""
+
+            # Obtiene el modelo de selección de las tablas
+            selection_modelResumen = self.InspeccionarTrabajador.tablaResumen.selectionModel()
+            selection_modelDetallada = self.InspeccionarTrabajador.tablaDetallada.selectionModel()
+
+            # Verifica si hay alguna celda seleccionada en los modelos de selección
+            if selection_modelResumen.hasSelection() and selection_modelDetallada.hasSelection():
+                selected = True
+                selectedResumenRow = self.InspeccionarTrabajador.tablaResumen.currentRow()
+                selectedDetalladaRow = self.InspeccionarTrabajador.tablaDetallada.currentRow()
+                selectedResumenItem = self.InspeccionarTrabajador.tablaResumen.item(selectedResumenRow, 1)
+                selectedDetalladaItem = self.InspeccionarTrabajador.tablaDetallada.item(selectedDetalladaRow, 1)
+
+                if selectedResumenRow == selectedDetalladaRow:
+                    if selectedResumenItem is None or selectedDetalladaItem is None:
+                        MensajesWindow.mostrarMensajeBusquedaError("Aún no existe el detalle del mes seleccionado")
+                    else:
+                        selectedDatetime = selectedResumenItem.text()
+                else:
+                    MensajesWindow.mostrarMensajeBusquedaError("Por favor, asegúrese de seleccionar los mismos meses "
+                                                               "tanto en la tabla resumen y en la tabla detallada")
+            elif selection_modelResumen.hasSelection():
+                selected = True
+                selectedRow = self.InspeccionarTrabajador.tablaResumen.currentRow()
+                selected_item = self.InspeccionarTrabajador.tablaResumen.item(selectedRow, 1)
+                if selected_item is not None:
+                    selectedDatetime = selected_item.text()
+                else:
+                    MensajesWindow.mostrarMensajeBusquedaError("Aún no existe detalle del mes seleccionado en la "
+                                                               "tabla resumen")
+            elif selection_modelDetallada.hasSelection():
+                selected = True
+                selectedRow = self.InspeccionarTrabajador.tablaDetallada.currentRow()
+                selected_item = self.InspeccionarTrabajador.tablaDetallada.item(selectedRow, 1)
+                if selected_item is not None:
+                    selectedDatetime = selected_item.text()
+                else:
+                    MensajesWindow.mostrarMensajeBusquedaError("Aún no existe detalle del mes seleccionado en la "
+                                                               "tabla detallada")
+            print(f"\nFecha seleccionada a pagar: {selectedDatetime}")
+            return selected, selectedDatetime
+        except Exception as e:
+            print(f"Error inesperado al intentar retornar datos de la fila seleccionada: {e}")
 
     def pagarSueldo(self):
         try:
-            if self.detalleMensual:
-                idBoleta = self.generarIDBoletaPago()
-                idTrabajador = self.IDTrabajador
-                suedoNeto = self.sueldoNeto
-                descuentoTotal = self.totalDctos
-                bonificacionTotal = self.totalBonificaciones
+            selected, selectedDatetime = self.returnRowDatetimeSelected()
+            if selected:
+                print(self.detalleMensual.detalleFecha)
+                detalleMensualPagar = Queries.get_detalle_mensual_trabajador_by_date(selectedDatetime)
+                detalleCalculoSueldoPagar = Queries.get_detalle_calculo_sueldo_by_id(detalleMensualPagar.IDTrabajador,
+                                                                                     detalleMensualPagar.IDMes)
+                if detalleMensualPagar and detalleCalculoSueldoPagar:
+                    idBoleta = self.generarIDBoletaPago(detalleMensualPagar.detalleFecha.year,
+                                                        detalleMensualPagar.detalleFecha.month)
+                    idTrabajador = detalleMensualPagar.IDTrabajador
+                    suedoNeto = detalleMensualPagar.detalleSueldoNeto
+                    descuentoTotal = detalleCalculoSueldoPagar.calcSueldoTotalDctos
+                    bonificacionTotal = detalleCalculoSueldoPagar.calcSueldoTotalBonificaciones
 
-                # Almacenar en la BD
-                Inserts.insertBoletaPago(idBoleta, idTrabajador, suedoNeto, descuentoTotal, bonificacionTotal)
+                    # Almacenar en la BD
+                    Inserts.insertBoletaPago(idBoleta, idTrabajador, suedoNeto, descuentoTotal, bonificacionTotal)
 
-                # Generar enlace PDF
-                self.generarPDF(idBoleta)
-
-                # Llenar la fila de la tabla de la GUI
-                self.fillRowGUITablaHistorialPagos(int(self.numMesSelec) - 1, idBoleta)
+                    # Generar enlace PDF
+                    self.generarPDF(idBoleta)
+                    print(int(detalleMensualPagar.detalleFecha.month) - 1)
+                    # Llenar la fila de la tabla Historial de pagos de la GUI
+                    self.fillRowGUITablaHistorialPagos(int(detalleMensualPagar.detalleFecha.month) - 1, idBoleta)
+                    print(f"Mes a llenar en historial pagos: {detalleMensualPagar.detalleFecha.month - 1}")
+                else:
+                    mensaje = "Aún no existe detalle del mes actual en la BD"
+                    print(mensaje)
+                    MensajesWindow.mostrarMensajeBusquedaError(mensaje)
             else:
-                print("Aún no existe detalle del mes actual")
+                mensaje = "Aún no se seleccionó una fila de la tabla resumen o tabla detallada para registrar el pago"
+                print(mensaje)
+                MensajesWindow.mostrarMensajeBusquedaError(mensaje)
+
         except Exception as e:
             print(f"Ocurrió un error durante el pago de sueldo: {e}")
 
@@ -720,14 +872,27 @@ class FormInspeccionarTrabajador:
     def regresar(self):
         self.parent.showBuscarExistenteTrabajador()
 
+    def actualizarFechaSimulada(self, indice):
+        # Añade 1 al índice para obtener el número del mes
+        numMes = indice + 1
+        # Obtiene la fecha actual
+        fechaSimulada = QDate.currentDate()
+        # Establece la nueva fecha con el mes seleccionado
+        fechaSimulada.setDate(fechaSimulada.year(), numMes, fechaSimulada.day())
+        # Establece la fecha en el widget dateEditFechaActual
+        self.InspeccionarTrabajador.dateEditFechaActual.setDate(fechaSimulada)
+
     def initGUI(self):
+
         # Otros
         self.InspeccionarTrabajador.dateEditFechaActual.setDate(QDate.currentDate())
+        self.InspeccionarTrabajador.comboBoxSimularMes.currentIndexChanged.connect(self.actualizarFechaSimulada)
 
         # Botones
         self.InspeccionarTrabajador.pushButtonRegresar.clicked.connect(self.regresar)
         self.InspeccionarTrabajador.pushButtonRegistrarDatosMensuales.clicked.connect(self.irFormRegistroDetalleMensual)
         self.InspeccionarTrabajador.pushButtonPagarSueldo.clicked.connect(self.pagarSueldo)
+
         # Tablas
         ancho_maximo = 1080
         num_columnas_TablaResumen = 6
@@ -745,13 +910,18 @@ class FormInspeccionarTrabajador:
         self.InspeccionarTrabajador.tablaDetallada.resizeColumnsToContents()
         self.InspeccionarTrabajador.tablaBonificaciones.resizeColumnToContents(1)
 
+        self.InspeccionarTrabajador.tablaResumen.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.InspeccionarTrabajador.tablaDetallada.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.InspeccionarTrabajador.tablaHistorialPagos.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+
 
 class FormRegistroDetalleMensual(QMainWindow):
-    def __init__(self, parent):
+    def __init__(self, parent, nombMes):
         super().__init__()
         self.registroDetalleMensual = uic.loadUi(f"{directorio_ui}TrabajadorRegistrarDetalleMensual.ui",
                                                  self)  # Asignar la interfaz al objeto actual
         self.parent = parent
+        self.nombMesSeleccionado = nombMes
         center(self.registroDetalleMensual)
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)  # Mantener por encima de otras ventanas
         self.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)  # Desactivar el botón de minimizar
@@ -768,14 +938,12 @@ class FormRegistroDetalleMensual(QMainWindow):
 
     def guardar(self):
         try:
-            print("\nGuardando registro detalle mensual")
             horasExtras = self.registroDetalleMensual.lineEditHorasExtras.text()
             minTardanza = self.registroDetalleMensual.lineEditMinutosTardanza.text()
             diasFaltados = self.registroDetalleMensual.lineEditDiasFaltados.text()
-            mesSeleccionado = self.registroDetalleMensual.comboBoxMeses.currentText()
-
+            #mesSeleccionado = self.registroDetalleMensual.comboBoxMeses.currentText()
             # Pasar las variables a la instancia de FormInspeccionarTrabajador
-            self.parent.obtenerDetalles(horasExtras, minTardanza, diasFaltados, mesSeleccionado)
+            self.parent.obtenerDetalles(horasExtras, minTardanza, diasFaltados, self.nombMesSeleccionado)
             self.ocultar()
         except Exception as e:
             print(f"Error al leer los detalles: {e}")
@@ -784,6 +952,9 @@ class FormRegistroDetalleMensual(QMainWindow):
         self.ocultar()
 
     def initGUI(self):
+
+        self.registroDetalleMensual.lineEditMes.setText(self.nombMesSeleccionado)
+
         # Botones
         self.registroDetalleMensual.buttonBoxGuardarCancelar.accepted.connect(self.guardar)
         self.registroDetalleMensual.buttonBoxGuardarCancelar.rejected.connect(self.cancelar)

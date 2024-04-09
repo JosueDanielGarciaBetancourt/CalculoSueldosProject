@@ -73,6 +73,13 @@ class Queries:
                                                                                    IDMes=id_mes).first()
             return detalle_mensual
 
+
+    @staticmethod
+    def get_detalle_mensual_trabajador_by_date(datetime):
+        with Session() as session:
+            detalle_mensual = session.query(tblDetalleMensualTrabajador).filter_by(detalleFecha=datetime).first()
+            return detalle_mensual
+
     @staticmethod
     def get_all_detalle_mensual_trabajador_by_id(id_trabajador):
         with Session() as session:

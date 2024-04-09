@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="imagenes">
+    <file>universidad-continental LOGO.png</file>
+    <file>monedas_dark.PNG</file>
+    <file>darkWolf.png</file>
+    <file>darkTrabajadorMejorado.png</file>
+    <file>code_background.jpeg</file>
+  </qresource>
+  <qresource prefix="iconos">
+    <file>lupa1.png</file>
+    <file>flecha_regresar.png</file>
+    <file>logo_sueldos.jpg</file>
+    <file>lupa.png</file>
+  </qresource>
+</RCC>

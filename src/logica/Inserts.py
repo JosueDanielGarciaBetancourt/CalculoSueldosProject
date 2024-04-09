@@ -33,7 +33,7 @@ class Inserts:
                     session.commit()
                     mensaje = "Se agregó el mes satisfactoriamente"
                     print(f"{mensaje}: \nID: {idMes}\nNombre: {nombMes}")
-                    # MensajesWindow.mostrarMensajeRegistroExito(mensaje)
+                    MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error
@@ -55,7 +55,7 @@ class Inserts:
                     mensaje = f"Se registró correctamente la bonificación\n ID: {idBonificacion}\n" \
                               f" Tipo:  {boniTipo}\n Unidad: {boniUnidad}\n Valor: {boniValor}\n "
                     print(mensaje)
-                    # MensajesWindow.mostrarMensajeRegistroExito(mensaje)
+                    MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error
@@ -78,7 +78,7 @@ class Inserts:
                     print(f"{mensaje}\nID: {idTrabajador}\nApellidos y Nombres: {trabaNombreApellidos}"
                           f"\nSueldo Base: {trabaSueldoBase}\nCargo: {Cargo}\nCreado el {trabajador.created_at}")
                     Inserts.signal.trabajadorInserted.emit()
-                    # MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
+                    MensajesWindow.mostrarMensajeRegistroExito("Se agregó el trabajador satisfactoriamente")
             except IntegrityError as e:
                 mensaje = f"Error al agregar registro: {e}"
                 print(mensaje)
@@ -120,7 +120,7 @@ class Inserts:
 
     @staticmethod
     def insertDetalleMensualTrabajador(idTrabajador, idMes, idDetalleCalculoSueldo, horasExtras, minutosTardanzas,
-                                       minutosJustificados, diasFalta, diasJustificados, sueldoNeto):
+                                       minutosJustificados, diasFalta, diasJustificados, sueldoNeto):#, detalleFecha):
         with Session() as session:
             try:
                 existing_DetalleMensualTrabajador = session.query(tblDetalleMensualTrabajador).filter_by(
@@ -137,6 +137,7 @@ class Inserts:
                                                                            detalleDiasFalta=diasFalta,
                                                                            detalleDiasJustificados=diasJustificados,
                                                                            detalleSueldoNeto=sueldoNeto)
+                                                                           # detalleFecha=detalleFecha)
                     session.add(detalleMensualTrabajador)
                     session.commit()
                     print(f"Se agregó el detalle mensual del trabajador {idTrabajador} en el mes {idMes}")
@@ -160,7 +161,9 @@ class Inserts:
                                                bolBonificacionTotal=boleBonificacionTotal)
                     session.add(boletaPago)
                     session.commit()
-                    print(f"Se agregó la boleta de pago {idBoletaPago} del trabajador {idTrabajador}")
+                    mensaje = f"Se agregó la boleta de pago {idBoletaPago} del trabajador {idTrabajador}"
+                    print(mensaje)
+                    MensajesWindow.mostrarMensajeRegistroExito(mensaje)
             except IntegrityError as e:
                 print(f"Error al agregar registro: {e}")
                 session.rollback()  # Revertir cambios en caso de error
